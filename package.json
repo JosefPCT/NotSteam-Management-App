@@ -16,5 +16,12 @@
   "bugs": {
     "url": "https://github.com/JosefPCT/NotSteam-Management-App/issues"
   },
-  "homepage": "https://github.com/JosefPCT/NotSteam-Management-App#readme"
+  "homepage": "https://github.com/JosefPCT/NotSteam-Management-App#readme",
+  "dependencies": {
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.10",
+    "express": "^5.1.0",
+    "express-validator": "^7.2.1",
+    "pg": "^8.16.3"
+  }
 }
