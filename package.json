@@ -1,0 +1,20 @@
+{
+  "name": "notsteam-management-app",
+  "version": "1.0.0",
+  "description": "A game inventory management app using Node and PostgresSQL.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JosefPCT/NotSteam-Management-App.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/JosefPCT/NotSteam-Management-App/issues"
+  },
+  "homepage": "https://github.com/JosefPCT/NotSteam-Management-App#readme"
+}
