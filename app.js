@@ -2,7 +2,7 @@ const express = require('express');
 const path = require('path');
 
 //Importing/requiring files
-const indexRouter = require('./routes/index');
+const indexRouter = require('./routes/indexRoutes');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
