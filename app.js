@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
 
+//Importing/requiring files
+const indexRouter = require('./routes/index');
+
 const PORT = process.env.PORT || 3000;
 const app = express();
 
@@ -10,11 +13,14 @@ app.set('view engine', 'ejs');
 // Allows serving of static files (i.e css)
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Allows parsing of Form data in the request body
 app.use(express.urlencoded( {extended: true}));
 
-app.get('/', (req, res) => {
-  res.send('Homepage');
-});
+app.use('/', indexRouter);
+
+// app.get('/', (req, res) => {
+//   res.send('Homepage');
+// });
 
 app.listen(PORT, () => {
   console.log(`Now listening to port:`, PORT);
