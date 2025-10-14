@@ -3,6 +3,7 @@ const path = require('path');
 
 //Importing/requiring files
 const indexRouter = require('./routes/indexRoutes');
+const gamesRouter = require('./routes/gamesRoutes');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -17,10 +18,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded( {extended: true}));
 
 app.use('/', indexRouter);
+app.use('/games', gamesRouter);
 
-// app.get('/', (req, res) => {
-//   res.send('Homepage');
-// });
 
 app.listen(PORT, () => {
   console.log(`Now listening to port:`, PORT);

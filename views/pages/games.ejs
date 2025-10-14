@@ -1,0 +1,12 @@
+<%- include('../partials/header') %>
+  <h1>List of All Games</h1>
+  <main>
+    <div>
+      <% if(locals.games) { %>
+        <% games.forEach(game => { %>
+          <p><%= game.game_name %></p>
+        <% }); %>
+      <% } %>
+    </div>
+  </main>
+<%- include('../partials/footer') %>
