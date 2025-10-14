@@ -4,6 +4,7 @@ const controller = require('../controllers/gamesController.js');
 
 const router = express.Router();
 
-router.get('/', controller.gamesPageGet);
+router.get('/', controller.gamesIndexGet);
+router.get('/:id', controller.gamePageGet);
 
 module.exports = router;
