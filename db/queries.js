@@ -1,10 +1,10 @@
 const pool = require('./pool');
 
-async function getUsernames(){
-  const { rows } =  await pool.query(`SELECT * FROM usernames`);
+async function getGames(){
+  const { rows } =  await pool.query(`SELECT * FROM games;`);
   return rows;
 }
 
 module.exports = {
-  getUsernames
+  getGames
 }
