@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS games(
 INSERT INTO games(game_name)
 VALUES
   ('Hades'),
-  ('Dont Starve')
+  ('Don''t Starve')
 `;
 
 async function main(){
