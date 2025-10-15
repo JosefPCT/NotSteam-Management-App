@@ -12,7 +12,23 @@ async function getGameById(id){
   return rows;
 }
 
+// Refactored function of getGameById to get all relevant data for a game
+async function getAllGameDataById(id){
+  const sql = `
+  SELECT ga.game_name, ge.genre_name, d.developer_name
+  FROM games ga
+  JOIN games_genres gg ON ga.game_id = gg.game_id
+  JOIN games_developers gd ON ga.game_id = gd.game_id
+  JOIN genres ge ON ge.genre_id = gg.genre_id
+  JOIN developers d ON d.developer_id = gd.developer_id
+  WHERE ga.game_id=$1;
+  `;
+  const { rows } = await pool.query(sql,[id]);
+  return rows;
+}
+
 module.exports = {
   getGames,
-  getGameById
+  getGameById,
+  getAllGameDataById
 }
