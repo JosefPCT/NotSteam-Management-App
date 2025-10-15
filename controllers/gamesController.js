@@ -13,7 +13,7 @@ exports.gamesIndexGet = async(req, res) => {
 
 exports.gamePageGet = async(req, res) => {
   const id = req.params.id;
-  const game = await db.getAllGameDataById(id);
+  const game = await db.getRequiredGameDataById(id);
   console.log("Game:", game);
   res.end();
 }
