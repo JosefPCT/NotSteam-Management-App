@@ -13,12 +13,6 @@ exports.gamesIndexGet = async(req, res) => {
 
 exports.gamePageGet = async(req, res) => {
   const id = req.params.id;
-
-  // const categories = await db.getAllCategories();
-  // categories.forEach((category) => {
-  //   console.log(category.table_name, category.col_name);
-  // })
-
   const game = await db.getAllGameDataById(id);
   console.log("Game:", game);
   res.end();
