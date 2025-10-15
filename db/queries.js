@@ -5,8 +5,9 @@ async function getGames(){
   return rows;
 }
 
+// Refactor to use a query to JOIN other tables for complete information on the game including genres and developers, and other categories it may have
 async function getGameById(id){
-  const sql = `SELECT * FROM games WHERE id=$1;`
+  const sql = `SELECT * FROM games WHERE game_id=$1;`
   const { rows } = await pool.query(sql,[id]);
   return rows;
 }

@@ -5,7 +5,7 @@
       <% if(locals.games) { %>
         <% games.forEach(game => { %>
           <div>
-            <a href="games/<%= game.id %>"><%= game.game_name %></a>
+            <a href="<%= game.game_id %>"><%= game.game_name %></a>
           </div>
         <% }); %>
       <% } %>
