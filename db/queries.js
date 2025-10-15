@@ -23,7 +23,42 @@ async function getRequiredGameDataById(id){
   WHERE ga.game_id=$1;
   `;
 
-  const { rows } = await pool.query(sql,[id])
+  const { rows } = await pool.query(sql,[id]);
+  return rows;
+}
+
+async function getGameNameById(id){
+ const sql = `
+   SELECT game_name 
+   FROM games
+   WHERE game_id=$1;
+ `;
+
+ const { rows } = await pool.query(sql, [id]);
+ return rows;
+}
+
+async function getGameGenresById(id){
+ const sql = `
+   SELECT ge.genre_name
+   FROM games ga
+   JOIN games_genres gg ON ga.game_id = gg.game_id
+   JOIN genres ge ON ge.genre_id = gg.genre_id
+   WHERE ga.game_id=$1;
+ `;
+  const { rows } = await pool.query(sql,[id]);
+  return rows;
+}
+
+async function getGameDeveloperById(id){
+ const sql = `
+   SELECT d.developer_name
+   FROM games ga
+   JOIN games_developers gd ON ga.game_id = gd.game_id
+   JOIN developers d ON d.developer_id = gd.developer_id
+   WHERE ga.game_id=$1;
+ `;
+  const { rows } = await pool.query(sql,[id]);
   return rows;
 }
 
@@ -75,6 +110,9 @@ async function getAllCategories(){
 module.exports = {
   getGames,
   getGameById,
+  getGameNameById,
+  getGameGenresById,
+  getGameDeveloperById,
   getAllGameDataById,
   getRequiredGameDataById,
   getAllCategories

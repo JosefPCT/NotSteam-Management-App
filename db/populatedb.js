@@ -34,7 +34,8 @@ PRIMARY KEY (game_id, developer_id)
 INSERT INTO games(game_name)VALUES
 ('Hades'),
 ('Don''t Starve'),
-('Stardew Valley');
+('Stardew Valley'),
+('Test game');
 
 INSERT INTO genres(genre_name) VALUES
 ('Roguelike'),
