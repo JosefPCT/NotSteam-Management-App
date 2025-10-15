@@ -44,6 +44,16 @@ developer_id INTEGER NOT NULL REFERENCES developers(developer_id) ON DELETE CASC
 PRIMARY KEY (game_id, developer_id)
 );
 
+CREATE TABLE categories(
+category_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+table_name VARCHAR (255),
+col_name VARCHAR (255)
+);
+
+INSERT INTO categories(table_name, col_name) VALUES
+('genres', 'genre'),
+('developers', 'developer');
+
 INSERT INTO games(game_name)VALUES
 ('Hades'),
 ('Don''t Starve'),
