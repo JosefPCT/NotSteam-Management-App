@@ -1,14 +1,21 @@
 <%- include('../partials/header') %>
-  <h1><%= game.game_name %></h1>
   <main>
-    <div>
-      <% if(locals.genres) { %>
-        <% games.forEach(game => { %>
+    <h1><%= game.game.game_name %></h1>
+    <p>Game ID: <%= game.game.game_id %></p>
+    <div class="list genres">
+      <% if(locals.game.genres.length !== 0) { %>
+        <p>Genres:</p>
+        <% game.genres.forEach(genre => { %>
           <div>
-            <a href="/games/<%=game.game_id %>"><%= game.game_name %></a>
+            <a href="/games?genres=<%=genre.genre_name.toLowerCase() %>"><%= genre.genre_name %></a>
           </div>
         <% }); %>
       <% } %>
     </div>
+    <% if(locals.game.developer) { %>
+    <div class="container developer">
+      <p>Developer: <a href="/games?developers=<%=game.developer.developer_name%>"><%=game.developer.developer_name%></a></p>
+    </div>
+    <% } %>
   </main>
 <%- include('../partials/footer') %>

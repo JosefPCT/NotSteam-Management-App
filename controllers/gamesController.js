@@ -28,9 +28,9 @@ exports.gamePageGet = async(req, res) => {
   // }
 
   const game = {
-    game_name: game_name[0].game_name,
+    game: game_name[0],
     genres: game_genres,
-    developer: developer[0].developer_name
+    developer: developer[0]
   }
   console.log(game);
 
