@@ -5,7 +5,7 @@ exports.gamesIndexGet = async(req, res) => {
   // refactor later to search for games differently if there are query parameters on the url using req.query.queryName
   const games = await db.getGames();
   console.log("Games:", games);
-  res.render('pages/games', {
+  res.render('pages/indexGames', {
     title: 'Games',
     games: games
   });
@@ -21,7 +21,7 @@ exports.gamePageGet = async(req, res) => {
   // })
   const developer = await db.getGameDeveloperById(id);
 
-  console.log(game_genres);
+  console.log(game_name);
   // if(game_name.length){
   //   console.log('Found');
   // }
