@@ -1,0 +1,14 @@
+<%- include('../partials/header') %>
+  <h1><%= game.game_name %></h1>
+  <main>
+    <div>
+      <% if(locals.genres) { %>
+        <% games.forEach(game => { %>
+          <div>
+            <a href="/games/<%=game.game_id %>"><%= game.game_name %></a>
+          </div>
+        <% }); %>
+      <% } %>
+    </div>
+  </main>
+<%- include('../partials/footer') %>

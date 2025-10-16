@@ -21,10 +21,23 @@ exports.gamePageGet = async(req, res) => {
   // })
   const developer = await db.getGameDeveloperById(id);
 
-  console.log(game_name);
+  // console.log(game_name);
+  console.log("Game:", game_genres);
   // if(game_name.length){
   //   console.log('Found');
   // }
-  console.log("Game:", game_genres);
-  res.end();
+
+  const game = {
+    game_name: game_name[0].game_name,
+    genres: game_genres,
+    developer: developer[0].developer_name
+  }
+  console.log(game);
+
+
+
+  res.render('pages/gamesId', {
+    title: 'Game',
+    game: game
+  });
 }
