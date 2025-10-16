@@ -3,7 +3,7 @@
     <h1><%= game.game.game_name %></h1>
     <p>Game ID: <%= game.game.game_id %></p>
 
-    <% if(locals.game.genres.length !== 0) { %>
+    <% if(locals.game.genres) { %>
     <div class="list genres">
       
         <p>Genres:</p>
