@@ -1,7 +1,22 @@
 <div>
   <p>Genres:</p>
-  <% if(locals.genres) { %>
-    <% genres.forEach((genre) => {%>
+  <% if(locals.allGenres && locals.myGenresId) { %>
+    <% allGenres.forEach((genre) => { %> 
+      <label for="genre-<%= genre.genre_name %>"><%= genre.genre_name %></label>
+      <input 
+      type="checkbox" 
+      name="genres" 
+      id="genre-<%= genre.genre_name %>"
+      value="<%= genre.genre_id %>"
+      <% if(myGenresId.includes(genre.genre_id)) { %>
+        checked
+      <% } %>
+      ><br>
+    <% }) %>
+  <% } %>
+ 
+ <% if(locals.genres) { %>
+    <% genres.forEach((genre) => { %>
       <label for="<%= genre.genre_name %>"><%= genre.genre_name %></label>
       <input type="checkbox" name="genres" id="<%= genre.genre_name %>" value="<%= genre.genre_id %>"><br>
     <% }) %>

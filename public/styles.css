@@ -1,3 +1,7 @@
 .row{
     display: flex;
 }
+
+.block{
+    display: block;
+}

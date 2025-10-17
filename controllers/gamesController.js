@@ -79,11 +79,26 @@ exports.gamesIdEditGet = async(req, res) => {
   const allDevelopers = await db.getAllDataByTable('developers');
 
   const id = req.params.id;
-  const game= await db.getGameById(id);
-  const genres = await db.getGameGenresById(id);
+  const game = await db.getGameById(id);
+  const myGenresRows = await db.getGameGenresById(id);
+  let myGenresId = [];
+  myGenresRows.forEach((row) => {
+    myGenresId.push(row.genre_id);
+  })
   const developer = await db.getGameDeveloperById(id);
 
-  
+  // console.log(game[0]);
+  // console.log(genresId.includes(2));
+  // console.log(Object.values(genres));
+  // console.log(developer[0]);
 
-  res.send('Edit Page');
+  // console.log(allGenres);
+  // console.log(allDevelopers);
+
+  res.render('pages/gamesIdEdit', {
+    title: 'Edit Page',
+    game: game[0],
+    allGenres: allGenres,
+    myGenresId: myGenresId
+  });
 }
