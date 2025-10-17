@@ -1,0 +1,10 @@
+<div>
+    test
+  <p>Genres:</p>
+  <% if(locals.genres) { %>
+    <% genres.forEach((genre) => {%>
+      <label for="<%= genre.genre_name %>"><%= genre.genre_name %></label>
+      <input type="checkbox" name="genre" id="<%= genre.genre_name %>" value="<%= genre.genre_id %>"><br>
+    <% }) %>
+  <% } %>
+</div>
