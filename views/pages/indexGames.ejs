@@ -6,6 +6,7 @@
         <% games.forEach(game => { %>
           <div>
             <a href="/games/<%=game.game_id %>"><%= game.game_name %></a>
+            <a href="/games/<%=game.game_id %>/delete">Delete</a>
           </div>
         <% }); %>
       <% } %>
