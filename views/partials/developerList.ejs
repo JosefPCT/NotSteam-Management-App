@@ -1,7 +1,7 @@
   <% if(locals.developers) { %>
   <div>
-    <label for="developer_name">Developer Name:</label>
-    <select name="developer_name" id="developer_name">
+    <label for="developer">Developer Name:</label>
+    <select name="developer" id="developer">
         <% developers.forEach(developer => { %>
           <option value="<%= developer.developer_id %>"><%= developer.developer_name %></option>
         <% }); %>

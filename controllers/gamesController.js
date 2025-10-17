@@ -23,7 +23,7 @@ exports.addGameGet = async(req, res) => {
 }
 
 exports.addGamePost = async(req, res) => {
-  res.send('add game post');
+  res.send(req.body);
 }
 
 exports.gamePageGet = async(req, res) => {
