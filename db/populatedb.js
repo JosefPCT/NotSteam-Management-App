@@ -11,7 +11,7 @@ game_name VARCHAR (255)
 
 CREATE TABLE genres(
 genre_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-genre_name VARCHAR (255)
+genre_name VARCHAR (255) UNIQUE
 );
 
 CREATE TABLE games_genres(
@@ -22,7 +22,7 @@ PRIMARY KEY (game_id, genre_id)
 
 CREATE TABLE developers(
 developer_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
-developer_name VARCHAR (255)
+developer_name VARCHAR (255) UNIQUE
 );
 
 CREATE TABLE games_developers(
