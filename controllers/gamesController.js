@@ -63,9 +63,13 @@ exports.gamesIdGet = async(req, res) => {
   });
 }
 
-exports.gamesIdDeleteGet = async(req, res) => {
-  console.log("Deleting");
-  const id = req.params.id;
-  db.deleteGameById(id);
+exports.gamesIdPost = async(req, res) => {
+  console.log("Post Route");
+  if(req.body._method === 'DELETE'){
+    console.log("Deleting...");
+    const id = req.params.id;
+    db.deleteGameById(id);
+  
+  }
   res.redirect('/games');
 }

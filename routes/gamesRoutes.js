@@ -8,7 +8,7 @@ router.get('/', controller.gamesIndexGet);
 router.get('/add', controller.gamesAddGet);
 router.post('/add', controller.gamesAddPost);
 router.get('/:id', controller.gamesIdGet);
-router.get("/:id/delete", controller.gamesIdDeleteGet);
+router.post("/:id", controller.gamesIdPost);
 
 
 module.exports = router;

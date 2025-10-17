@@ -1,5 +1,7 @@
 const pool = require('./pool');
 
+// SELECTING
+
 async function getAllDataByTable(table){
   const sql = `
     SELECT * 
