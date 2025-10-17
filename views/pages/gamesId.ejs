@@ -4,7 +4,7 @@
     <p>Game ID: <%= game.game.game_id %></p>
 
     <% if(locals.game.genres) { %>
-    <div class="list genres">
+    <div class="list-genres">
       
         <p>Genres:</p>
         <% game.genres.forEach(genre => { %>
@@ -16,7 +16,7 @@
     <% } %>
 
     <% if(locals.game.developer) { %>
-    <div class="container developer">
+    <div class="container-developer">
       <p>Developer: <a href="/games?developers=<%=game.developer.developer_name%>"><%=game.developer.developer_name%></a></p>
     </div>
     <% } %>
