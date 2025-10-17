@@ -12,7 +12,9 @@ exports.gamesIndexGet = async(req, res) => {
 }
 
 exports.addGameGet = async(req, res) => {
-  res.send('add game get');
+  res.render('pages/addGame', {
+    title: 'Add a game',
+  });
 }
 
 exports.addGamePost = async(req, res) => {
