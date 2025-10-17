@@ -4,11 +4,6 @@
     <input type="text" name="game_name" id="game_name">
   </div>
   <%- include('./genreList') %>
-  <div>
-    <label for="developer_name">Developer Name:</label>
-    <select name="developer_name" id="developer_name">
-        <option value=""></option>
-    </select>
-  </div>
+  <%- include('./developerList') %>
   <button type="submit">Add Game</button>
 </form>

@@ -13,10 +13,12 @@ exports.gamesIndexGet = async(req, res) => {
 
 exports.addGameGet = async(req, res) => {
   const genres = await db.getAllDataByTable('genres');
+  const developers = await db.getAllDataByTable('developers');
 
   res.render('pages/addGame', {
     title: 'Add a game',
-    genres: genres
+    genres: genres,
+    developers: developers
   });
 }
 
