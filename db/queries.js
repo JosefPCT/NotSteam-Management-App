@@ -16,7 +16,7 @@ async function getGames(){
   return rows;
 }
 
-async function getGameNameById(id){
+async function getGameById(id){
  const sql = `
    SELECT game_id, game_name 
    FROM games
@@ -84,7 +84,7 @@ async function deleteGameById(id){
 module.exports = {
   getAllDataByTable,
   getGames,
-  getGameNameById,
+  getGameById,
   getGameGenresById,
   getGameDeveloperById,
   insertGame,

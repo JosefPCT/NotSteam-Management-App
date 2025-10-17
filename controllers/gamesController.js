@@ -47,7 +47,7 @@ exports.gamesAddPost = async(req, res) => {
 
 exports.gamesIdGet = async(req, res) => {
   const id = req.params.id;
-  const game_name = await db.getGameNameById(id);
+  const game_name = await db.getGameById(id);
   const game_genres = await db.getGameGenresById(id);
   const developer = await db.getGameDeveloperById(id);
 
@@ -72,4 +72,18 @@ exports.gamesIdPost = async(req, res) => {
   
   }
   res.redirect('/games');
+}
+
+exports.gamesIdEditGet = async(req, res) => {
+  const allGenres = await db.getAllDataByTable('genres');
+  const allDevelopers = await db.getAllDataByTable('developers');
+
+  const id = req.params.id;
+  const game= await db.getGameById(id);
+  const genres = await db.getGameGenresById(id);
+  const developer = await db.getGameDeveloperById(id);
+
+  
+
+  res.send('Edit Page');
 }
