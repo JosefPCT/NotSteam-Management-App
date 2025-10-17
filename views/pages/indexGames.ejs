@@ -4,9 +4,12 @@
     <div>
       <% if(locals.games) { %>
         <% games.forEach(game => { %>
-          <div>
+          <div class="row">
             <a href="/games/<%=game.game_id %>"><%= game.game_name %></a>
-            <a href="/games/<%=game.game_id %>/delete">Delete</a>
+            <form action="/games/<%= game.game_id %>" method="POST">
+              <input type="hidden" name="_method" value="DELETE">
+              <button type="submit">Delete</button>
+            </form>
           </div>
         <% }); %>
       <% } %>
