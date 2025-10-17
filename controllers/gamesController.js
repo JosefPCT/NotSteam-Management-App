@@ -11,6 +11,14 @@ exports.gamesIndexGet = async(req, res) => {
   });
 }
 
+exports.addGameGet = async(req, res) => {
+  res.send('add game get');
+}
+
+exports.addGamePost = async(req, res) => {
+  res.send('add game post');
+}
+
 exports.gamePageGet = async(req, res) => {
   const id = req.params.id;
   // const game = await db.getRequiredGameDataById(id);
