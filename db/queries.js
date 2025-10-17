@@ -1,5 +1,16 @@
 const pool = require('./pool');
 
+async function getAllDataByTable(table){
+  const sql = `
+    SELECT * 
+    FROM ` + table + `;`;
+
+
+
+  const { rows } = await pool.query(sql);
+  return rows;
+}
+
 async function getGames(){
   const { rows } =  await pool.query(`SELECT * FROM games;`);
   return rows;
@@ -38,15 +49,6 @@ async function getGameNameById(id){
  return rows;
 }
 
-async function getAllGameGenres(){
-  const sql = `
-    SELECT * 
-    FROM genres;
-  `;
-
-  const { rows } = await pool.query(sql);
-  return rows;
-}
 
 async function getGameGenresById(id){
  const sql = `
@@ -59,6 +61,8 @@ async function getGameGenresById(id){
   const { rows } = await pool.query(sql,[id]);
   return rows;
 }
+
+
 
 async function getGameDeveloperById(id){
  const sql = `
@@ -118,10 +122,10 @@ async function getAllCategories(){
 }
 
 module.exports = {
+  getAllDataByTable,
   getGames,
   getGameById,
   getGameNameById,
-  getAllGameGenres,
   getGameGenresById,
   getGameDeveloperById,
   getAllGameDataById,
