@@ -23,7 +23,29 @@ exports.addGameGet = async(req, res) => {
 }
 
 exports.addGamePost = async(req, res) => {
-  res.send(req.body);
+  let game_id = await db.insertGame(req.body.game_name);
+  game_id = game_id[0].game_id
+  // console.log("showing game_id");
+  // console.log(game_id);
+  // res.send(req.body.genres.length);
+  // console.log(Object.keys(req.body));
+  Object.keys(req.body).forEach((key) => {
+    if(key !== 'game_name'){
+      if(Array.isArray(req.body[key])){
+        console.log('an array');
+        req.body[key].forEach((item_id) => {
+          console.log('item', item_id);
+          db.insertRelationByTable(game_id, item_id, key);
+        });
+      } else {
+        console.log("not an array", req.body[key]);
+        console.log(key);
+        db.insertRelationByTable(game_id, req.body[key], key);
+      }
+    }
+  });
+
+  res.redirect('/games');
 }
 
 exports.gamePageGet = async(req, res) => {

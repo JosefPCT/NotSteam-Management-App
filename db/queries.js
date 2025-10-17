@@ -121,6 +121,36 @@ async function getAllCategories(){
   return rows;
 }
 
+
+// Inserting
+
+async function insertGame(data){
+  const sql = `
+  INSERT INTO games(game_name) VALUES
+  ($1)
+  RETURNING game_id;
+  `;
+
+  const { rows } = await pool.query(sql, [data]);
+  // console.log('Inserted row:', rows);
+  return rows;
+}
+
+async function insertRelationByTable(game_id, data_id, table){
+  // Alternative: Query to categories table to get column name of the table, might need to create a category table
+  let col_name = table.slice(0, -1);
+  const sql = `INSERT INTO games_` + table + `(game_id,` + col_name + `_id) VALUES ($1,$2);`;
+  await pool.query(sql, [game_id,data_id]);
+}
+
+async function deleteGameById(id){
+  const sql = `
+    DELETE FROM games
+    WHERE id=$1;
+  `;
+  await pool.query(sql);
+}
+
 module.exports = {
   getAllDataByTable,
   getGames,
@@ -130,5 +160,7 @@ module.exports = {
   getGameDeveloperById,
   getAllGameDataById,
   getRequiredGameDataById,
-  getAllCategories
+  getAllCategories,
+  insertGame,
+  insertRelationByTable
 }
