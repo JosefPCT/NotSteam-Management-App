@@ -11,7 +11,7 @@ exports.gamesIndexGet = async(req, res) => {
   });
 }
 
-exports.addGameGet = async(req, res) => {
+exports.gamesAddGet = async(req, res) => {
   const genres = await db.getAllDataByTable('genres');
   const developers = await db.getAllDataByTable('developers');
 
@@ -22,13 +22,10 @@ exports.addGameGet = async(req, res) => {
   });
 }
 
-exports.addGamePost = async(req, res) => {
+exports.gamesAddPost = async(req, res) => {
   let game_id = await db.insertGame(req.body.game_name);
-  game_id = game_id[0].game_id
-  // console.log("showing game_id");
-  // console.log(game_id);
-  // res.send(req.body.genres.length);
-  // console.log(Object.keys(req.body));
+  game_id = game_id[0].game_id;
+
   Object.keys(req.body).forEach((key) => {
     if(key !== 'game_name'){
       if(Array.isArray(req.body[key])){
@@ -48,40 +45,27 @@ exports.addGamePost = async(req, res) => {
   res.redirect('/games');
 }
 
-exports.gamePageDelete = async(req, res) => {
-  console.log("Deleting");
+exports.gamesIdGet = async(req, res) => {
   const id = req.params.id;
-  db.deleteGameById(id);
-  res.redirect('/games');
-}
-
-exports.gamePageGet = async(req, res) => {
-  const id = req.params.id;
-  // const game = await db.getRequiredGameDataById(id);
   const game_name = await db.getGameNameById(id);
   const game_genres = await db.getGameGenresById(id);
-  // game_genres.forEach((genre) => {
-  //   console.log(genre.genre_name);
-  // })
   const developer = await db.getGameDeveloperById(id);
-
-  // console.log(game_name);
-  console.log("Game:", game_genres);
-  // if(game_name.length){
-  //   console.log('Found');
-  // }
 
   const game = {
     game: game_name[0],
     genres: game_genres,
     developer: developer[0]
   }
-  console.log(game);
-
-
 
   res.render('pages/gamesId', {
     title: 'Game',
     game: game
   });
+}
+
+exports.gamesIdDeleteGet = async(req, res) => {
+  console.log("Deleting");
+  const id = req.params.id;
+  db.deleteGameById(id);
+  res.redirect('/games');
 }
