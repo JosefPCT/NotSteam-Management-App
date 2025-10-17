@@ -143,12 +143,14 @@ async function insertRelationByTable(game_id, data_id, table){
   await pool.query(sql, [game_id,data_id]);
 }
 
+// Deleting
+
 async function deleteGameById(id){
   const sql = `
     DELETE FROM games
-    WHERE id=$1;
+    WHERE game_id=$1;
   `;
-  await pool.query(sql);
+  await pool.query(sql, [id]);
 }
 
 module.exports = {
@@ -162,5 +164,6 @@ module.exports = {
   getRequiredGameDataById,
   getAllCategories,
   insertGame,
-  insertRelationByTable
+  insertRelationByTable,
+  deleteGameById,
 }

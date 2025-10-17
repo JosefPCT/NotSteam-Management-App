@@ -48,6 +48,13 @@ exports.addGamePost = async(req, res) => {
   res.redirect('/games');
 }
 
+exports.gamePageDelete = async(req, res) => {
+  console.log("Deleting");
+  const id = req.params.id;
+  db.deleteGameById(id);
+  res.redirect('/games');
+}
+
 exports.gamePageGet = async(req, res) => {
   const id = req.params.id;
   // const game = await db.getRequiredGameDataById(id);
