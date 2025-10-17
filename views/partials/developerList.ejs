@@ -1,3 +1,21 @@
+  <% if(locals.allDevelopers && locals.myDeveloper) { %>
+  <div>
+    <label for="developers">Developer Name:</label>
+    <select name="developers" id="developers">
+      <% allDevelopers.forEach(developer => { %>
+        <option 
+        value="<%= developer.developer_id%>"
+        <% if(myDeveloper.developer_id == developer.developer_id) { %>
+          selected
+        <% } %>
+        >
+          <%= developer.developer_name %>
+        </option>
+      <% }) %>
+    </select>
+  </div>
+  <% } %>
+  
   <% if(locals.developers) { %>
   <div>
     <label for="developers">Developer Name:</label>
