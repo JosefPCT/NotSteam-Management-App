@@ -38,6 +38,16 @@ async function getGameNameById(id){
  return rows;
 }
 
+async function getAllGameGenres(){
+  const sql = `
+    SELECT * 
+    FROM genres;
+  `;
+
+  const { rows } = await pool.query(sql);
+  return rows;
+}
+
 async function getGameGenresById(id){
  const sql = `
    SELECT ge.genre_id, ge.genre_name
@@ -111,6 +121,7 @@ module.exports = {
   getGames,
   getGameById,
   getGameNameById,
+  getAllGameGenres,
   getGameGenresById,
   getGameDeveloperById,
   getAllGameDataById,

@@ -12,8 +12,11 @@ exports.gamesIndexGet = async(req, res) => {
 }
 
 exports.addGameGet = async(req, res) => {
+  const genres = await db.getAllGameGenres();
+
   res.render('pages/addGame', {
     title: 'Add a game',
+    genres: genres
   });
 }
 
