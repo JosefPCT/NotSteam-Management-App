@@ -51,7 +51,6 @@ exports.gamesIdGet = async(req, res) => {
   const myGenres = await db.getGameGenresById(id);
   const myDeveloper = await db.getGameDeveloperById(id);
 
-
   res.render('pages/gamesId', {
     title: 'Game',
     myGame: myGame[0],
