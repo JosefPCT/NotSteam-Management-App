@@ -94,6 +94,20 @@ async function updateGame(newData,game_id){
   await pool.query(sql, [newData,game_id]);
 }
 
+async function updateRelationByTable(game_id, data_id, table){
+  // Alternative: Query to categories table to get column name of the table, might need to create a category table
+  let col_name = table.slice(0, -1);
+  console.log('table name', table)
+  console.log('col name', col_name);
+  const sql = `
+    UPDATE games_` + table +
+    ` SET game_id = $1, ` + col_name + `_id = $2
+    WHERE game_id = $1;
+  `;
+  console.log('sql', sql);
+  await pool.query(sql, [game_id,data_id]);
+}
+
 // Deleting
 async function deleteGameById(id){
   const sql = `
@@ -120,6 +134,7 @@ module.exports = {
   getGameDeveloperById,
   insertGame,
   insertRelationByTable,
+  updateRelationByTable,
   updateGame,
   deleteGameById,
   deleteAllGenresOfGameById

@@ -5,7 +5,7 @@
       <label for="genre-<%= genre.genre_name %>"><%= genre.genre_name %></label>
       <input 
       type="checkbox" 
-      name="genres" 
+      name="genres[]" 
       id="genre-<%= genre.genre_name %>"
       value="<%= genre.genre_id %>"
       <% if((locals.myGenresId) && (myGenresId.includes(genre.genre_id))) { %>

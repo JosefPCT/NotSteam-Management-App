@@ -108,7 +108,7 @@ exports.gamesIdEditGet = async(req, res) => {
 
 exports.gamesIdEditPost = async(req, res) => {
   console.log("'games/:id/edit' POST route...");
-  console.log(req.body);
+  console.log('request body', req.body);
   
   const prevGame = await db.getGameById(req.params.id);
 
@@ -135,7 +135,7 @@ exports.gamesIdEditPost = async(req, res) => {
       } else {
         console.log("not an array", req.body[key]);
         console.log(key);
-        await db.insertRelationByTable(game_id, req.body[key], key);
+        await db.updateRelationByTable(game_id, req.body[key], key);
       }
     }
   });
