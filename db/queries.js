@@ -72,6 +72,17 @@ async function insertRelationByTable(game_id, data_id, table){
   await pool.query(sql, [game_id,data_id]);
 }
 
+// Updating
+
+async function updateGame(newData,game_id){
+  const sql = `
+  UPDATE games
+  SET game_name = $1
+  WHERE game_id = $2;
+  `;
+  await pool.query(sql, [newData,game_id]);
+}
+
 // Deleting
 async function deleteGameById(id){
   const sql = `
@@ -89,6 +100,7 @@ module.exports = {
   getGameDeveloperById,
   insertGame,
   insertRelationByTable,
+  updateGame,
   deleteGameById,
 }
 
