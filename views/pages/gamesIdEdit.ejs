@@ -1,12 +1,6 @@
 <main>
     <h1>Edit Page</h1>
-    <form action="/games/<%= game.game_id%>/edit" method="POST">
-        <div>
-            <label for="game_name">Game Name:</label>
-            <input type="text" name="game_name" id="game_name" value="<%= game.game_name %>">
-        </div>
-        <%- include('../partials/genreList') %>
-        <%- include('../partials/developerList') %>
-    <button type="submit">Edit Game</button>
-    </form>
+    <%- include('../partials/gameForm', { 
+      buttonText: 'Edit Game'
+    }) %>
 </main>

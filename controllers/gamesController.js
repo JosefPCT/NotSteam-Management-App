@@ -15,10 +15,11 @@ exports.gamesAddGet = async(req, res) => {
   const allGenres = await db.getAllDataByTable('genres');
   const allDevelopers = await db.getAllDataByTable('developers');
 
-  res.render('pages/addGame', {
+  res.render('pages/gamesAdd', {
     title: 'Add a game',
     allGenres,
-    allDevelopers
+    allDevelopers,
+    action: '/games/add'
   });
 }
 
@@ -94,10 +95,11 @@ exports.gamesIdEditGet = async(req, res) => {
 
   res.render('pages/gamesIdEdit', {
     title: 'Edit Page',
-    game: game[0],
+    myGame: game[0],
     allGenres: allGenres,
     myGenresId: myGenresId,
     allDevelopers: allDevelopers,
-    myDeveloper: myDeveloper[0]
+    myDeveloper: myDeveloper[0],
+    action: '/games/' + game[0].game_id + '/edit'
   });
 }
