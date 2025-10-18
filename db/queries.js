@@ -12,7 +12,12 @@ async function getAllDataByTable(table){
 }
 
 async function getGames(){
-  const { rows } =  await pool.query(`SELECT * FROM games;`);
+  const sql = `
+    SELECT *
+    FROM games
+    ORDER BY game_id;
+  `;
+  const { rows } =  await pool.query(sql);
   return rows;
 }
 
