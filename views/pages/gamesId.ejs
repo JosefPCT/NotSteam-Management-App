@@ -1,13 +1,13 @@
 <%- include('../partials/header') %>
   <main>
-    <h1><%= game.game.game_name %></h1>
-    <p>Game ID: <%= game.game.game_id %></p>
+    <h1><%= myGame.game_name %></h1>
+    <p>Game ID: <%= myGame.game_id %></p>
 
-    <% if(locals.game.genres) { %>
+    <% if(locals.myGenres) { %>
     <div class="list-genres">
       
         <p>Genres:</p>
-        <% game.genres.forEach(genre => { %>
+        <% myGenres.forEach(genre => { %>
           <div>
             <a href="/games?genres=<%=genre.genre_name.toLowerCase() %>"><%= genre.genre_name %></a>
           </div>
@@ -15,16 +15,16 @@
     </div>
     <% } %>
 
-    <% if(locals.game.developer) { %>
+    <% if(locals.myDeveloper) { %>
     <div class="container-developer">
-      <p>Developer: <a href="/games?developers=<%=game.developer.developer_name%>"><%=game.developer.developer_name%></a></p>
+      <p>Developer: <a href="/games?developers=<%= myDeveloper.developer_name %>"><%= myDeveloper.developer_name%></a></p>
     </div>
     <% } %>
 
-    <a href="/games/<%= game.game.game_id %>/edit">
+    <a href="/games/<%= myGame.game_id %>/edit">
       <button>Edit</button>
     </a>
-    <form action="/games/<%= game.game.game_id %>" method="POST">
+    <form action="/games/<%= myGame.game_id %>" method="POST">
       <input type="hidden" name="_method" value="DELETE">
       <button type="submit">Delete</button>
     </form>

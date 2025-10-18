@@ -47,19 +47,16 @@ exports.gamesAddPost = async(req, res) => {
 
 exports.gamesIdGet = async(req, res) => {
   const id = req.params.id;
-  const game_name = await db.getGameById(id);
-  const game_genres = await db.getGameGenresById(id);
-  const developer = await db.getGameDeveloperById(id);
+  const myGame = await db.getGameById(id);
+  const myGenres = await db.getGameGenresById(id);
+  const myDeveloper = await db.getGameDeveloperById(id);
 
-  const game = {
-    game: game_name[0],
-    genres: game_genres,
-    developer: developer[0]
-  }
 
   res.render('pages/gamesId', {
     title: 'Game',
-    game: game
+    myGame: myGame[0],
+    myGenres,
+    myDeveloper: myDeveloper[0]
   });
 }
 
