@@ -27,18 +27,18 @@ exports.gamesAddPost = async(req, res) => {
   let game_id = await db.insertGame(req.body.game_name);
   game_id = game_id[0].game_id;
 
-  Object.keys(req.body).forEach((key) => {
+  Object.keys(req.body).forEach(async (key) => {
     if(key !== 'game_name'){
       if(Array.isArray(req.body[key])){
         console.log('an array');
-        req.body[key].forEach((item_id) => {
+        req.body[key].forEach(async (item_id) => {
           console.log('item', item_id);
-          db.insertRelationByTable(game_id, item_id, key);
+          await db.insertRelationByTable(game_id, item_id, key);
         });
       } else {
         console.log("not an array", req.body[key]);
         console.log(key);
-        db.insertRelationByTable(game_id, req.body[key], key);
+        await db.insertRelationByTable(game_id, req.body[key], key);
       }
     }
   });
@@ -51,6 +51,8 @@ exports.gamesIdGet = async(req, res) => {
   const myGame = await db.getGameById(id);
   const myGenres = await db.getGameGenresById(id);
   const myDeveloper = await db.getGameDeveloperById(id);
+
+  console.log('My genres', myGenres);
 
   res.render('pages/gamesId', {
     title: 'Game',
@@ -107,7 +109,10 @@ exports.gamesIdEditGet = async(req, res) => {
 exports.gamesIdEditPost = async(req, res) => {
   console.log("'games/:id/edit' POST route...");
   console.log(req.body);
+  
   const prevGame = await db.getGameById(req.params.id);
+
+  let game_id = prevGame[0].game_id;
 
   // Check if game name is the same as the updated one, update if not
   if(!(prevGame[0].game_name === req.body.game_name)){
@@ -115,9 +120,25 @@ exports.gamesIdEditPost = async(req, res) => {
     await db.updateGame(req.body.game_name, req.params.id);
   }
 
-  // Checking if an update occured in the genres
-  // const currGenres = await db.getGameGenresById(req.params.id);
-  // console.log(currGenres);
-  // console.log(req.body.genres);
+  // Delete all genres for this specific game
+  await db.deleteAllGenresOfGameById(game_id);
+
+  // Inserts relational table data
+  Object.keys(req.body).forEach(async (key) => {
+    if(key !== 'game_name'){
+      if(Array.isArray(req.body[key])){
+        console.log('an array');
+        req.body[key].forEach(async (item_id) => {
+          console.log('item', item_id);
+          await db.insertRelationByTable(game_id, item_id, key);
+        });
+      } else {
+        console.log("not an array", req.body[key]);
+        console.log(key);
+        await db.insertRelationByTable(game_id, req.body[key], key);
+      }
+    }
+  });
+
   res.redirect('/games/' + req.params.id);
 }

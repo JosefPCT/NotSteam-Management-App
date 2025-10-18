@@ -73,7 +73,13 @@ async function insertGame(data){
 async function insertRelationByTable(game_id, data_id, table){
   // Alternative: Query to categories table to get column name of the table, might need to create a category table
   let col_name = table.slice(0, -1);
-  const sql = `INSERT INTO games_` + table + `(game_id,` + col_name + `_id) VALUES ($1,$2);`;
+  const sql = `
+  INSERT INTO games_` + table + `(game_id,` + col_name + `_id) 
+    SELECT $1, $2
+  WHERE NOT EXISTS (
+    SELECT 1 FROM games_` + table + ` WHERE game_id = $1 AND ` + col_name +`_id = $2
+  );
+  `;
   await pool.query(sql, [game_id,data_id]);
 }
 
@@ -97,6 +103,15 @@ async function deleteGameById(id){
   await pool.query(sql, [id]);
 }
 
+async function deleteAllGenresOfGameById(id){
+  const sql = `
+    DELETE FROM games_genres
+    WHERE game_id = $1
+  `;
+
+  await pool.query(sql, [id]);
+}
+
 module.exports = {
   getAllDataByTable,
   getGames,
@@ -107,6 +122,7 @@ module.exports = {
   insertRelationByTable,
   updateGame,
   deleteGameById,
+  deleteAllGenresOfGameById
 }
 
 // Unused
