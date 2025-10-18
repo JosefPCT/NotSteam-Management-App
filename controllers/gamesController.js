@@ -107,12 +107,10 @@ exports.gamesIdEditGet = async(req, res) => {
 exports.gamesIdEditPost = async(req, res) => {
   console.log("'games/:id/edit' POST route...");
   console.log(req.body);
-  // Checking if an update occured in the game name
-  const currGame = await db.getGameById(req.params.id);
-  console.log(currGame[0].game_name);
-  console.log(req.body.game_name);
-  console.log(currGame[0].game_name === req.body.game_name);
-  if(!(currGame[0].game_name === req.body.game_name)){
+  const prevGame = await db.getGameById(req.params.id);
+
+  // Check if game name is the same as the updated one, update if not
+  if(!(prevGame[0].game_name === req.body.game_name)){
     console.log("Update new name");
     await db.updateGame(req.body.game_name, req.params.id);
   }
@@ -121,5 +119,5 @@ exports.gamesIdEditPost = async(req, res) => {
   // const currGenres = await db.getGameGenresById(req.params.id);
   // console.log(currGenres);
   // console.log(req.body.genres);
-  res.end();
+  res.redirect('/games/' + req.params.id);
 }
