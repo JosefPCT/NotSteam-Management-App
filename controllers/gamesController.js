@@ -24,7 +24,9 @@ exports.gamesAddGet = async(req, res) => {
 }
 
 exports.gamesAddPost = async(req, res) => {
-  let game_id = await db.insertGame(req.body.game_name);
+  const { game_name } = req.body;
+
+  let game_id = await db.insertGame(game_name);
   game_id = game_id[0].game_id;
 
   Object.keys(req.body).forEach(async (key) => {
@@ -47,7 +49,8 @@ exports.gamesAddPost = async(req, res) => {
 }
 
 exports.gamesIdGet = async(req, res) => {
-  const id = req.params.id;
+  const { id } = req.params;
+
   const myGame = await db.getGameById(id);
   const myGenres = await db.getGameGenresById(id);
   const myDeveloper = await db.getGameDeveloperById(id);
@@ -64,9 +67,11 @@ exports.gamesIdGet = async(req, res) => {
 
 exports.gamesIdPost = async(req, res) => {
   console.log("Post Route");
-  if(req.body._method === 'DELETE'){
+  const { _method } = req.body;
+  const { id } = req.params;
+
+  if(_method === 'DELETE'){
     console.log("Deleting...");
-    const id = req.params.id;
     db.deleteGameById(id);
   
   }
@@ -74,10 +79,11 @@ exports.gamesIdPost = async(req, res) => {
 }
 
 exports.gamesIdEditGet = async(req, res) => {
+  const { id } = req.params;
+
   const allGenres = await db.getAllDataByTable('genres');
   const allDevelopers = await db.getAllDataByTable('developers');
 
-  const id = req.params.id;
   const game = await db.getGameById(id);
   const myGenresRows = await db.getGameGenresById(id);
   let myGenresId = [];
@@ -109,15 +115,17 @@ exports.gamesIdEditGet = async(req, res) => {
 exports.gamesIdEditPost = async(req, res) => {
   console.log("'games/:id/edit' POST route...");
   console.log('request body', req.body);
+  const { id } = req.params
+  const { game_name } = req.body;
   
-  const prevGame = await db.getGameById(req.params.id);
+  const prevGame = await db.getGameById(id);
 
   let game_id = prevGame[0].game_id;
 
   // Check if game name is the same as the updated one, update if not
-  if(!(prevGame[0].game_name === req.body.game_name)){
+  if(!(prevGame[0].game_name === game_name)){
     console.log("Update new name");
-    await db.updateGame(req.body.game_name, req.params.id);
+    await db.updateGame(game_name, id);
   }
 
   // Delete all genres for this specific game
@@ -140,5 +148,5 @@ exports.gamesIdEditPost = async(req, res) => {
     }
   });
 
-  res.redirect('/games/' + req.params.id);
+  res.redirect('/games/' + id);
 }
