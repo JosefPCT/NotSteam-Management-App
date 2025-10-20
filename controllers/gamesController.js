@@ -1,9 +1,25 @@
+const { body, validationResult, matchedData } = require("express-validator");
+
 const db = require('../db/queries');
 
+// Validation
 
+const testErr = "test error";
+
+const validateGame = [
+  body("game_name").trim()
+    
+];
+
+const isUniqueGame = (value) => {
+  
+}
+
+// Route handlers
 exports.gamesIndexGet = async(req, res) => {
   // refactor later to search for games differently if there are query parameters on the url using req.query.queryName
   const games = await db.getGames();
+
   console.log("Games:", games);
   res.render('pages/indexGames', {
     title: 'Games',

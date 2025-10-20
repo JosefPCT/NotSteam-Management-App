@@ -135,13 +135,33 @@ async function deleteAllGenresOfGameById(id){
 // Helper Functions
 
 async function getColNameOfTable(table){
-  const getColumnNameSql = `
+  const sql = `
     SELECT col_name
     FROM categories
     WHERE table_name = $1;
   `;
-  const { rows } = await pool.query(getColumnNameSql, [table]);
+  const { rows } = await pool.query(sql, [table]);
   return rows[0].col_name;
+}
+
+async function checkGameExists(game_name){
+  const sql = `
+    SELECT 1
+    FROM games
+    WHERE game_name = $1
+  `;
+
+  const { rows } = await pool.query(sql, [game_name]);
+
+  if(rows.length === 0){
+    return false;
+  } else {
+    return true;
+  }
+}
+
+async function testQuery(){
+
 }
 
 module.exports = {
@@ -155,7 +175,9 @@ module.exports = {
   updateRelationByTable,
   updateGame,
   deleteGameById,
-  deleteAllGenresOfGameById
+  deleteAllGenresOfGameById,
+  checkGameExists,
+  testQuery
 }
 
 // Unused
