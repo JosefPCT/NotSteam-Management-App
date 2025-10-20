@@ -5,15 +5,25 @@ const db = require('../db/queries');
 // Validation
 
 const testErr = "test error";
+const genresErr = "must have at least 1 genre";
+
+const isUniqueGame = async (value) => {
+  const gameExists = await db.checkGameExists(value);
+  if(gameExists){
+    throw new Error (`Game already exists, name must be a unique value`);
+  }
+  return true;
+}
 
 const validateGame = [
   body("game_name").trim()
+    .custom(isUniqueGame),
+  body("genres").trim()
+    .notEmpty().withMessage(genresErr)
     
 ];
 
-const isUniqueGame = (value) => {
-  
-}
+
 
 // Route handlers
 exports.gamesIndexGet = async(req, res) => {
@@ -39,30 +49,47 @@ exports.gamesAddGet = async(req, res) => {
   });
 }
 
-exports.gamesAddPost = async(req, res) => {
-  const { game_name } = req.body;
+exports.gamesAddPost = [ 
+  validateGame,
+  async(req, res) => {
+    console.log("Checking req body", req.body);
+    const errors = validationResult(req);
+    const allGenres = await db.getAllDataByTable('genres');
+    const allDevelopers = await db.getAllDataByTable('developers');
 
-  let game_id = await db.insertGame(game_name);
-  game_id = game_id[0].game_id;
-
-  Object.keys(req.body).forEach(async (key) => {
-    if(key !== 'game_name'){
-      if(Array.isArray(req.body[key])){
-        console.log('an array');
-        req.body[key].forEach(async (item_id) => {
-          console.log('item', item_id);
-          await db.insertRelationByTable(game_id, item_id, key);
-        });
-      } else {
-        console.log("not an array", req.body[key]);
-        console.log(key);
-        await db.insertRelationByTable(game_id, req.body[key], key);
-      }
+    if(!errors.isEmpty()){
+      return res.status(400).render('pages/gamesAdd', {
+        title: 'Add a game',
+        allGenres,
+        allDevelopers,
+        action: '/games/add',
+        errors: errors.array(),
+      })
     }
-  });
+    const { game_name } = req.body;
 
-  res.redirect('/games');
-}
+    let game_id = await db.insertGame(game_name);
+    game_id = game_id[0].game_id;
+
+    Object.keys(req.body).forEach(async (key) => {
+      if(key !== 'game_name'){
+        if(Array.isArray(req.body[key])){
+          console.log('an array');
+          req.body[key].forEach(async (item_id) => {
+            console.log('item', item_id);
+            await db.insertRelationByTable(game_id, item_id, key);
+          });
+        } else {
+          console.log("not an array", req.body[key]);
+          console.log(key);
+          await db.insertRelationByTable(game_id, req.body[key], key);
+        }
+      }
+    });
+
+    res.redirect('/games');
+  }
+];
 
 exports.gamesIdGet = async(req, res) => {
   const { id } = req.params;
