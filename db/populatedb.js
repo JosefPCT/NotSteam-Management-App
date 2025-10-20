@@ -9,6 +9,12 @@ game_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 game_name VARCHAR (255)
 );
 
+CREATE TABLE categories(
+category_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+table_name VARCHAR (255) NOT NULL,
+col_name VARCHAR (255) NOT NULL
+);
+
 CREATE TABLE genres(
 genre_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
 genre_name VARCHAR (255) UNIQUE
@@ -36,6 +42,10 @@ INSERT INTO games(game_name)VALUES
 ('Don''t Starve'),
 ('Stardew Valley'),
 ('Test game');
+
+INSERT INTO categories(table_name, col_name) VALUES
+('genres', 'genre'),
+('developers', 'developer');
 
 INSERT INTO genres(genre_name) VALUES
 ('Roguelike'),
