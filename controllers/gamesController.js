@@ -55,7 +55,28 @@ const validateEditGame = [
 // Route handlers
 exports.gamesIndexGet = async(req, res) => {
   // refactor later to search for games differently if there are query parameters on the url using req.query.queryName
-  const games = await db.getGames();
+  const { genres } = req.query;
+  
+  console.log(Object.keys(req.query).length);
+  console.log(Object.values(req.query)[0]);
+
+  let games;
+
+  if(Object.keys(req.query)[0] === 'games'){
+    games = await db.searchGameByName(Object.values(req.query)[0]);
+  } else if(Object.keys(req.query).length !== 0){
+    games = await db.getGamesByTable(Object.keys(req.query)[0], Object.values(req.query)[0]);
+  } else {
+    games = await db.getGames();
+  }
+
+  // if(genres){
+  //   // games = await db.getGamesByGenre(genres);
+  //   games = await db.getGamesByTable('genres', genres);
+  // } else {
+  //   games = await db.getGames();
+  // }
+
 
   console.log("Games:", games);
   res.render('pages/indexGames', {

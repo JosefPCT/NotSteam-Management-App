@@ -32,7 +32,36 @@ async function getGameById(id){
  return rows;
 }
 
+async function searchGameByName(name){
+ const pattern = `%${name}%`;
+ const sql = `
+   SELECT *
+   FROM games
+   WHERE LOWER(game_name) ILIKE LOWER($1)
+ `;
+
+ const { rows } = await pool.query(sql, [pattern])
+ return rows;
+}
+
+// Get Game Data based on the relational table
+async function getGamesByTable(table, toSearchData){
+  const col_name = await getColNameOfTable(table);
+  const pattern = `%${toSearchData}%`;
+  const sql = `
+    SELECT ga.*
+    FROM games ga
+    JOIN games_` + table + ` r1 ON ga.game_id = r1.game_id
+    JOIN ` + table + ` t1 ON t1.`+ col_name +`_id = r1.` + col_name +`_id 
+    WHERE LOWER(t1.` + col_name + `_name) ILIKE LOWER($1);
+    `;
+  console.log(sql);
+  const { rows } = await pool.query(sql, [pattern]);
+  return rows;
+}
+
 async function getGameGenresById(id){
+ 
  const sql = `
    SELECT ge.*
    FROM games ga
@@ -179,6 +208,8 @@ async function testQuery(){
 module.exports = {
   getAllDataByTable,
   getGames,
+  searchGameByName,
+  getGamesByTable,
   getGameById,
   getGameGenresById,
   getGameDeveloperById,
@@ -259,5 +290,18 @@ module.exports = {
 // async function getAllCategories(){
 //   const sql = `SELECT * FROM categories`;
 //   const { rows } = await pool.query(sql);
+//   return rows;
+// }
+
+// async function getGamesByGenre(genre){
+//   const sql = `
+//    SELECT ga.*
+//    FROM games ga
+//    JOIN games_genres gg ON ga.game_id = gg.game_id
+//    JOIN genres ge ON ge.genre_id = gg.genre_id
+//    WHERE LOWER(ge.genre_name) = LOWER($1);
+//   `;
+
+//   const { rows } = await pool.query(sql, [genre]);
 //   return rows;
 // }
