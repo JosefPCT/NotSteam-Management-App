@@ -23,7 +23,7 @@ async function getGames(){
 
 async function getGameById(id){
  const sql = `
-   SELECT game_id, game_name 
+   SELECT *
    FROM games
    WHERE game_id=$1;
  `;
@@ -34,7 +34,7 @@ async function getGameById(id){
 
 async function getGameGenresById(id){
  const sql = `
-   SELECT ge.genre_id, ge.genre_name
+   SELECT ge.*
    FROM games ga
    JOIN games_genres gg ON ga.game_id = gg.game_id
    JOIN genres ge ON ge.genre_id = gg.genre_id
@@ -46,7 +46,7 @@ async function getGameGenresById(id){
 
 async function getGameDeveloperById(id){
  const sql = `
-   SELECT d.developer_id, d.developer_name
+   SELECT d.*
    FROM games ga
    JOIN games_developers gd ON ga.game_id = gd.game_id
    JOIN developers d ON d.developer_id = gd.developer_id
