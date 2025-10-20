@@ -72,7 +72,10 @@ async function insertGame(data){
 
 async function insertRelationByTable(game_id, data_id, table){
   // Alternative: Query to categories table to get column name of the table, might need to create a category table
-  let col_name = table.slice(0, -1);
+
+  let col_name = await getColNameOfTable(table);
+  // let col_name = table.slice(0, -1);
+
   const sql = `
   INSERT INTO games_` + table + `(game_id,` + col_name + `_id) 
     SELECT $1, $2
@@ -96,7 +99,10 @@ async function updateGame(newData,game_id){
 
 async function updateRelationByTable(game_id, data_id, table){
   // Alternative: Query to categories table to get column name of the table, might need to create a category table
-  let col_name = table.slice(0, -1);
+  // let col_name = table.slice(0, -1);
+
+  let col_name = await getColNameOfTable(table);
+
   console.log('table name', table)
   console.log('col name', col_name);
   const sql = `
@@ -124,6 +130,18 @@ async function deleteAllGenresOfGameById(id){
   `;
 
   await pool.query(sql, [id]);
+}
+
+// Helper Functions
+
+async function getColNameOfTable(table){
+  const getColumnNameSql = `
+    SELECT col_name
+    FROM categories
+    WHERE table_name = $1;
+  `;
+  const { rows } = await pool.query(getColumnNameSql, [table]);
+  return rows[0].col_name;
 }
 
 module.exports = {
