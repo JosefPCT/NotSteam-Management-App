@@ -6,14 +6,34 @@ const db = require('../db/queries');
 
 const testErr = "test error";
 const genresErr = "must have at least 1 genre";
+const existingGameErr = 'Game already exists, name must be a unique value'
 
+// Can disable code since game name doesn't have to be unique
 const isUniqueGame = async (value) => {
   const gameExists = await db.checkGameExists(value);
   if(gameExists){
-    throw new Error (`Game already exists, name must be a unique value`);
+    throw new Error (existingGameErr);
   }
   return true;
 }
+
+const isNotSameNameAndUniqueName = (async(value, { req }) => {
+  // console.log("inside validator custom");
+  // console.log("reqbody", req.body);
+  // console.log("reqparams", req.params);
+  // console.log("value", value);
+
+  const { id } = req.params;
+  const prevGameName = await db.getGameNameById(id);
+
+  if(prevGameName !== value){
+    const gameExists = await db.checkGameExists(value);
+    if(gameExists){
+      throw new Error(existingGameErr);
+    }
+  }
+  return true;
+})
 
 const validateAddGame = [
   body("game_name").trim()
@@ -24,6 +44,8 @@ const validateAddGame = [
 ];
 
 const validateEditGame = [
+  body("game_name").trim()
+    .custom(isNotSameNameAndUniqueName),
   body("genres").trim()
     .notEmpty().withMessage(genresErr)
 ]
@@ -185,15 +207,16 @@ exports.gamesIdEditPost = [
       return res.status(400).render('pages/gamesIdEdit', {
         title: 'Edit Game',
         myGame: game[0],
-        allGenres: allGenres,
-        myGenresId: myGenresId,
-        allDevelopers: allDevelopers,
+        allGenres,
+        myGenresId,
+        allDevelopers,
         myDeveloper: myDeveloper[0],
         action: '/games/' + game[0].game_id + '/edit',
         errors: errors.array(),
       })
     }
-    
+
+    // If no errors, proceed on updating
     const prevGame = await db.getGameById(id);
     let game_id = prevGame[0].game_id;
 

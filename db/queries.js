@@ -160,6 +160,18 @@ async function checkGameExists(game_name){
   }
 }
 
+async function getGameNameById(id){
+  console.log('Get game name...');
+  const sql = `
+    SELECT game_name
+    FROM games
+    WHERE game_id = $1;
+  `;
+
+  const { rows } = await pool.query(sql, [id]);
+  return rows[0].game_name;
+}
+
 async function testQuery(){
 
 }
@@ -177,6 +189,7 @@ module.exports = {
   deleteGameById,
   deleteAllGenresOfGameById,
   checkGameExists,
+  getGameNameById,
   testQuery
 }
 
