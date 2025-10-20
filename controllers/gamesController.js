@@ -70,14 +70,6 @@ exports.gamesIndexGet = async(req, res) => {
     games = await db.getGames();
   }
 
-  // if(genres){
-  //   // games = await db.getGamesByGenre(genres);
-  //   games = await db.getGamesByTable('genres', genres);
-  // } else {
-  //   games = await db.getGames();
-  // }
-
-
   console.log("Games:", games);
   res.render('pages/indexGames', {
     title: 'Games',
