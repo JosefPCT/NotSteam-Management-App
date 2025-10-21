@@ -1,0 +1,10 @@
+<%- include('../partials/header') %>
+<main>
+    <h1>Showing All Categories</h1>
+    <% if(locals.categories) { %>
+      <% categories.forEach((category) => { %>
+        <a href="/categories/<%= category.table_name %>" class="card"> <%= category.table_name %> </a>
+      <% }) %>
+    <% } %>
+</main>
+<%- include('../partials/footer') %>

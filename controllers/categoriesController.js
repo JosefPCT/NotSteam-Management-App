@@ -1,5 +1,10 @@
 const db = require('../db/queries');
 
 exports.categoriesIndexGet = async(req, res) => {
-  res.send('Category Route');
+  const categories = await db.getAllCategories();
+
+  res.render('pages/categoriesIndex', { 
+    title: 'All Categories',
+    categories
+  })
 }
