@@ -77,3 +77,9 @@ exports.categoriesIdGet = async(req, res) => {
     data,
   })
 }
+
+exports.categoriesIdPost = async(req, res) => {
+  res.send(req.body);
+  const { id } = req.params;
+  console.log(id);
+};
