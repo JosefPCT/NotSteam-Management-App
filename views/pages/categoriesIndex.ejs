@@ -10,10 +10,12 @@
                 <a href="/categories/<%= category.table_name %>/edit">
                     <button>Edit</button>
                 </a>
-                <form action="/categories/<%= category.table_name %>" method="POST">
-                    <input type="hidden" name="_method" value="DELETE">
-                    <button type="submit">Delete</button>
-                </form>
+                <% if(!(category.table_name === 'developers' || category.table_name === 'genres')) { %>
+                    <form action="/categories/<%= category.table_name %>" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit">Delete</button>
+                    </form>
+                <% } %>
             </div>
         </div>
       <% }) %>
