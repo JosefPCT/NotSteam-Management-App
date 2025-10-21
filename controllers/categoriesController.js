@@ -96,6 +96,9 @@ exports.categoriesIdPost = async(req, res) => {
 exports.categoriesIdAddGet = [
   async(req, res) => {
     const { id } = req.params;
-    res.send(`Add item to: ${id}`);
+    res.render('pages/categoriesIdAdd', {
+      title: "Add an item",
+      id
+    })
   }
 ];
