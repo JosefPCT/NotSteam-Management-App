@@ -2,6 +2,11 @@
     display: flex;
 }
 
+.flex-SpaceBetween{
+  display: flex;
+  justify-content: space-between;
+}
+
 .searchbar{
     display: flex;
 }

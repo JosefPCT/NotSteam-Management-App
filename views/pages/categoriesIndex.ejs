@@ -4,7 +4,7 @@
     <% if(locals.categories) { %>
       <div class="container">
       <% categories.forEach((category) => { %>
-        <div class="card row separate">
+        <div class="card flex-SpaceBetween">
             <a href="/categories/<%= category.table_name %>">By <%= category.table_name %> </a> 
             <div class="row">
                 <a href="/categories/<%= category.table_name %>/edit">
