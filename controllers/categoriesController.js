@@ -5,7 +5,7 @@ const { body, validationResult, matchedData } = require("express-validator");
 
 // Validation
 
-const existingCategoryErr = 'Category already exists, name must be a unique value'
+const existingCategoryErr = 'Category already exists, category must be a unique value'
 const notEmptyErr = "must not be empty";
 
 //
