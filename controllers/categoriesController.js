@@ -10,8 +10,17 @@ exports.categoriesIndexGet = async(req, res) => {
 }
 
 exports.categoriesAddGet = async(req, res) => {
-  res.send('Adding category');
+  res.render('pages/categoriesAdd', {
+    title: 'Add'
+  });
 }
+
+exports.categoriesAddPost = [
+  async(req, res) => {
+    console.log(req.body);
+    res.end();
+  }
+];
 
 exports.categoriesIdGet = async(req, res) => {
   const { id } = req.params
