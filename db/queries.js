@@ -23,6 +23,15 @@ async function createRelationalTable(table_name, col_name){
   await pool.query(sql);
 }
 
+async function insertDataToTable(table_name, col_name, data){
+  const sql = `
+    INSERT INTO ${table_name}(${col_name}) VALUES
+    ($1)
+  `;
+
+  await pool.query(sql, [data]);
+}
+
 async function dropTable(table_name){
   const sql = `
     DROP TABLE ${table_name};
