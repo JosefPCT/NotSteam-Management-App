@@ -1,6 +1,7 @@
 <%- include('../partials/header') %>
 <main>
     <h1>All <%= categoryObj.table_name %></h1>
+    <a href="/categories/<%= categoryObj.table_name %>/add">Add an item</a>
     <% if(locals.data) { %>
       <% let columnName =  categoryObj.col_name + '_name' %>
       <div>
