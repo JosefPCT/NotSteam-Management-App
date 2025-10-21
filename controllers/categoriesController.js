@@ -6,6 +6,7 @@ const { body, validationResult, matchedData } = require("express-validator");
 // Validation
 
 const existingCategoryErr = 'Category already exists, name must be a unique value'
+const notEmptyErr = "must not be empty";
 
 //
 const isUniqueCategory = async (value) => {
@@ -18,9 +19,10 @@ const isUniqueCategory = async (value) => {
 
 const validateAddCategory = [
   body("table_name").trim()
+    .notEmpty.withMessage(`Category Name(Plural) ${notEmptyErr}`)
     .custom(isUniqueGame),
   body("col_name").trim()
-    .notEmpty().withMessage(genresErr)
+    .notEmpty().withMessage(`Category Name(Singular) ${notEmptyErr}`)
     
 ];
 
@@ -42,9 +44,19 @@ exports.categoriesAddGet = async(req, res) => {
 }
 
 exports.categoriesAddPost = [
+  validateAddCategory,
   async(req, res) => {
     console.log(req.body);
-    res.send(req.body);
+
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+      return res.status(400).render('pages/categoriesAdd', {
+        title: 'Add',
+        action: '/add',
+        errors: errors.array(),
+      })
+    }
+    res.redirect('/categories');
   }
 ];
 
