@@ -1,0 +1,18 @@
+<%- include('../partials/header') %>
+<main>
+    <h1>All <%= categoryObj.table_name %></h1>
+    <% if(locals.data) { %>
+      <% let columnName =  categoryObj.col_name + '_name' %>
+      <div>
+        <% data.forEach((item) => { %>
+        <% console.log(columnName) %>
+        <div class="card">
+            <a href="/games?category=<%= categoryObj.table_name %>&searchString=<%= item[columnName] %>">
+                <%= item[columnName] %>
+            </a>
+        </div>
+        <% }) %>  
+      </div>
+    <% } %>
+</main>
+<%- include('../partials/footer') %>

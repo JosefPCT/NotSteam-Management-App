@@ -11,5 +11,12 @@ exports.categoriesIndexGet = async(req, res) => {
 
 exports.categoriesIdGet = async(req, res) => {
   const { id } = req.params
-  res.send(id);
+  const data = await db.getAllDataByTable(id);
+  const categoryObj = await db.getCategoryByTableName(id);
+
+  res.render('pages/categoriesId', {
+    title: `All ${categoryObj.table_name}`,
+    categoryObj,
+    data,
+  })
 }

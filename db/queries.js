@@ -12,6 +12,17 @@ async function getAllCategories(){
   return rows;
 }
 
+async function getCategoryByTableName(table){
+  const sql = `
+    SELECT *
+    FROM categories
+    WHERE table_name = $1
+  `;
+
+  const { rows } = await pool.query(sql, [table]);
+  return rows[0];
+}
+
 async function getAllDataByTable(table){
   const sql = `
     SELECT * 
@@ -216,6 +227,7 @@ async function testQuery(){
 }
 
 module.exports = {
+  getCategoryByTableName,
   getAllDataByTable,
   getGames,
   searchGameByName,
