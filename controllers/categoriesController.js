@@ -12,15 +12,15 @@ const notEmptyErr = "must not be empty";
 const isUniqueCategory = async (value) => {
   const gameExists = await db.categoryExists(value);
   if(gameExists){
-    throw new Error (existingGameErr);
+    throw new Error (existingCategoryErr);
   }
   return true;
 }
 
 const validateAddCategory = [
   body("table_name").trim()
-    .notEmpty.withMessage(`Category Name(Plural) ${notEmptyErr}`)
-    .custom(isUniqueGame),
+    .notEmpty().withMessage(`Category Name(Plural) ${notEmptyErr}`)
+    .custom(isUniqueCategory),
   body("col_name").trim()
     .notEmpty().withMessage(`Category Name(Singular) ${notEmptyErr}`)
     
