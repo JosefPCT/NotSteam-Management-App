@@ -1,5 +1,31 @@
 const db = require('../db/queries');
 
+const { body, validationResult, matchedData } = require("express-validator");
+
+
+// Validation
+
+const existingCategoryErr = 'Category already exists, name must be a unique value'
+
+//
+const isUniqueCategory = async (value) => {
+  const gameExists = await db.categoryExists(value);
+  if(gameExists){
+    throw new Error (existingGameErr);
+  }
+  return true;
+}
+
+const validateAddCategory = [
+  body("table_name").trim()
+    .custom(isUniqueGame),
+  body("col_name").trim()
+    .notEmpty().withMessage(genresErr)
+    
+];
+
+// Route handlers
+
 exports.categoriesIndexGet = async(req, res) => {
   const categories = await db.getAllCategories();
 
@@ -18,7 +44,7 @@ exports.categoriesAddGet = async(req, res) => {
 exports.categoriesAddPost = [
   async(req, res) => {
     console.log(req.body);
-    res.end();
+    res.send(req.body);
   }
 ];
 

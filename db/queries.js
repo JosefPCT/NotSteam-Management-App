@@ -1,6 +1,55 @@
 const pool = require('./pool');
 
-// SELECTING
+// Table Creation
+async function createTable(table_name, col_name){
+
+  const sql = `
+    CREATE TABLE ${table_name}(
+    ${col_name}_id INTEGER PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
+    ${col_name}_name VARCHAR (255) UNIQUE
+    );
+  `;
+  await pool.query(sql);
+}
+
+async function dropTable(table_name){
+  const sql = `
+    DROP TABLE ${table_name};
+  `;
+}
+
+// Categories
+
+// INSERT to categories table
+async function insertToCategories(table_name, col_name){
+  const sql = `
+    INSERT INTO categories(table_name, col_name) VALUES
+    ($1, $2),
+  `;
+
+  await pool.query(sql, [table_name, col_name]);
+}
+
+// DELETE from categories table
+
+async function deleteFromCategoriesByTableName(table_name){
+  const sql = `
+    DELETE FROM categories
+    WHERE LOWER(table_name) = LOWER($1)
+  `;
+  await pool.query(sql, [table_name]);
+}
+
+// SELECT categories
+async function getAllCategories(){
+  const sql = `
+    SELECT *
+    FROM categories;
+  `;
+
+  const { rows } = await pool.query(sql);
+  return rows;
+}
 
 async function getAllCategories(){
   const sql = `
@@ -22,6 +71,24 @@ async function getCategoryByTableName(table){
   const { rows } = await pool.query(sql, [table]);
   return rows[0];
 }
+
+async function categoryExists(table_name){
+  const sql = `
+    SELECT 1
+    FROM categories
+    WHERE table_name = $1
+  `;
+
+  const { rows } = await pool.query(sql, [table_name]);
+
+  if(rows.length === 0){
+    return false;
+  } else {
+    return true;
+  }
+}
+
+// SELECT general
 
 async function getAllDataByTable(table){
   const sql = `
@@ -227,6 +294,11 @@ async function testQuery(){
 }
 
 module.exports = {
+  createTable,
+  dropTable,
+  insertToCategories,
+  deleteFromCategoriesByTableName,
+  categoryExists,
   getCategoryByTableName,
   getAllDataByTable,
   getGames,
