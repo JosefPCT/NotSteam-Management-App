@@ -2,6 +2,16 @@ const pool = require('./pool');
 
 // SELECTING
 
+async function getAllCategories(){
+  const sql = `
+    SELECT *
+    FROM categories;
+  `;
+
+  const { rows } = await pool.query(sql);
+  return rows;
+}
+
 async function getAllDataByTable(table){
   const sql = `
     SELECT * 
@@ -213,6 +223,7 @@ module.exports = {
   getGameById,
   getGameGenresById,
   getGameDeveloperById,
+  getAllCategories,
   insertGame,
   insertRelationByTable,
   updateRelationByTable,

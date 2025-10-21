@@ -55,24 +55,29 @@ const validateEditGame = [
 // Route handlers
 exports.gamesIndexGet = async(req, res) => {
   // refactor later to search for games differently if there are query parameters on the url using req.query.queryName
-  const { genres } = req.query;
-  
-  console.log(Object.keys(req.query).length);
-  console.log(Object.values(req.query)[0]);
+  const categories = await db.getAllCategories();
+
+  const { category, searchString } = req.query; 
 
   let games;
-
-  if(Object.keys(req.query)[0] === 'games'){
-    games = await db.searchGameByName(Object.values(req.query)[0]);
-  } else if(Object.keys(req.query).length !== 0){
-    games = await db.getGamesByTable(Object.keys(req.query)[0], Object.values(req.query)[0]);
+  if(category && searchString){
+    // console.log('has a category', category);
+    // console.log('has a searchString', searchString);
+    if(category === 'games'){
+      games = await db.searchGameByName(searchString);
+    } else {
+      games = await db.getGamesByTable(category, searchString);
+    }
   } else {
     games = await db.getGames();
   }
+  
+
 
   console.log("Games:", games);
   res.render('pages/indexGames', {
     title: 'Games',
+    categories,
     games: games
   });
 }
@@ -262,3 +267,15 @@ exports.gamesIdEditPost = [
     res.redirect('/games/' + id);
   }
 ]
+
+  // Old code on performing a search query on `gamesIndexGet`
+  // console.log(Object.keys(req.query).length);
+  // console.log(Object.values(req.query)[0]);
+
+  // if(Object.keys(req.query)[0] === 'games'){
+  //   games = await db.searchGameByName(Object.values(req.query)[0]);
+  // } else if(Object.keys(req.query).length !== 0){
+  //   games = await db.getGamesByTable(Object.keys(req.query)[0], Object.values(req.query)[0]);
+  // } else {
+  //   games = await db.getGames();
+  // }

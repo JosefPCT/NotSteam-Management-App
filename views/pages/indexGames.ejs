@@ -2,6 +2,21 @@
   <h1>List of All Games</h1>
   <main>
     <div>
+      <form action="/games" method="get" class="searchbar">
+        <select name="category" id="category">
+          <option value="games">By game name</option>
+          <% if(locals.categories) { %>
+            <% categories.forEach((category) => { %>
+              <option value="<%= category.table_name %>">By <%= category.col_name %></option>
+            <% }) %> 
+          <% } %>
+        </select>
+        <input type="text" name="searchString" id="searchString">
+        <button>Search</button>
+      </form>
+    </div>
+  
+    <div>
       <% if(locals.games) { %>
         <% games.forEach(game => { %>
           <div class="row">
