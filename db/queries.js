@@ -24,7 +24,7 @@ async function dropTable(table_name){
 async function insertToCategories(table_name, col_name){
   const sql = `
     INSERT INTO categories(table_name, col_name) VALUES
-    ($1, $2),
+    ($1, $2);
   `;
 
   await pool.query(sql, [table_name, col_name]);
