@@ -8,3 +8,8 @@ exports.categoriesIndexGet = async(req, res) => {
     categories
   })
 }
+
+exports.categoriesIdGet = async(req, res) => {
+  const { id } = req.params
+  res.send(id);
+}

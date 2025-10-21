@@ -5,6 +5,6 @@ const controller = require('../controllers/categoriesController.js');
 const router = express.Router();
 
 router.get('/', controller.categoriesIndexGet);
-
+router.get('/:id', controller.categoriesIdGet);
 
 module.exports = router;
