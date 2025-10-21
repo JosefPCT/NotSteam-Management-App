@@ -92,3 +92,10 @@ exports.categoriesIdPost = async(req, res) => {
 
   res.redirect('/categories');
 };
+
+exports.categoriesIdAddGet = [
+  async(req, res) => {
+    const { id } = req.params;
+    res.send(`Add item to: ${id}`);
+  }
+];
