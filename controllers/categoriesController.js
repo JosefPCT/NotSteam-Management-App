@@ -9,6 +9,10 @@ exports.categoriesIndexGet = async(req, res) => {
   })
 }
 
+exports.categoriesAddGet = async(req, res) => {
+  res.send('Adding category');
+}
+
 exports.categoriesIdGet = async(req, res) => {
   const { id } = req.params
   const data = await db.getAllDataByTable(id);
