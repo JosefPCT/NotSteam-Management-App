@@ -27,6 +27,16 @@ async function dropTable(table_name){
   const sql = `
     DROP TABLE ${table_name};
   `;
+
+  await pool.query(sql);
+}
+
+async function dropRelationalTable(table_name){
+  const sql = `
+    DROP TABLE games_${table_name};
+  `;
+
+  await pool.query(sql);
 }
 
 // Categories
@@ -308,6 +318,7 @@ module.exports = {
   createTable,
   createRelationalTable,
   dropTable,
+  dropRelationalTable,
   insertToCategories,
   deleteFromCategoriesByTableName,
   categoryExists,

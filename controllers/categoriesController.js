@@ -79,7 +79,16 @@ exports.categoriesIdGet = async(req, res) => {
 }
 
 exports.categoriesIdPost = async(req, res) => {
-  res.send(req.body);
+  const { _method } = req.body;
   const { id } = req.params;
   console.log(id);
+
+  if( _method && _method === 'DELETE'){
+    console.log("Dropping table...");
+    await db.dropRelationalTable(id);
+    await db.dropTable(id);
+    await db.deleteFromCategoriesByTableName(id);
+  }
+
+  res.redirect('/categories');
 };
