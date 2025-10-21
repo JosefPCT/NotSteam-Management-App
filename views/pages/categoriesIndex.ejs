@@ -3,7 +3,9 @@
     <h1>Showing All Categories</h1>
     <% if(locals.categories) { %>
       <% categories.forEach((category) => { %>
-        <a href="/categories/<%= category.table_name %>" class="card"> <%= category.table_name %> </a>
+        <div class="card">
+            <a href="/categories/<%= category.table_name %>">By <%= category.table_name %> </a>
+        </div>
       <% }) %>
     <% } %>
 </main>

@@ -19,7 +19,7 @@
     <div>
       <% if(locals.games) { %>
         <% games.forEach(game => { %>
-          <div class="row">
+          <div class="row card">
             <a href="/games/<%=game.game_id %>"><%= game.game_name %></a>
                 <a href="/games/<%= game.game_id %>/edit">
                   <button>Edit</button>
