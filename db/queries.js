@@ -48,6 +48,21 @@ async function dropRelationalTable(table_name){
   await pool.query(sql);
 }
 
+async function dataExistsInTable(table_name, col_name, data){
+  const sql = `
+    SELECT 1
+    FROM ${table_name}
+    WHERE ${col_name}_name = $1
+  `;
+
+  const { rows } = await pool.query(sql, [data]);
+  if(rows[0].length ===  0 ){
+    return false
+  } else {
+    return true
+  }
+}
+
 // Categories
 
 // INSERT to categories table
