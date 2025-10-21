@@ -25,7 +25,7 @@ async function createRelationalTable(table_name, col_name){
 
 async function insertDataToTable(table_name, col_name, data){
   const sql = `
-    INSERT INTO ${table_name}(${col_name}) VALUES
+    INSERT INTO ${table_name}(${col_name}_name) VALUES
     ($1)
   `;
 
