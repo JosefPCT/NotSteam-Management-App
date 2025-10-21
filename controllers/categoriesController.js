@@ -58,9 +58,10 @@ exports.categoriesAddPost = [
     }
     if(table_name && col_name){
       await db.createTable(table_name, col_name);
+      await db.createRelationalTable(table_name,col_name);
       await db.insertToCategories(table_name, col_name);
     }
-    
+
     res.redirect('/categories');
   }
 ];

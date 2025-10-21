@@ -12,6 +12,17 @@ async function createTable(table_name, col_name){
   await pool.query(sql);
 }
 
+async function createRelationalTable(table_name, col_name){
+  const sql = `
+    CREATE TABLE games_${table_name}(
+    game_id INTEGER NOT NULL REFERENCES games(game_id) ON DELETE CASCADE,
+    ${col_name}_id INTEGER NOT NULL REFERENCES ${table_name}(${col_name}_id) ON DELETE CASCADE,
+    PRIMARY KEY (game_id, ${col_name}_id)
+    );
+  `;
+  await pool.query(sql);
+}
+
 async function dropTable(table_name){
   const sql = `
     DROP TABLE ${table_name};
@@ -295,6 +306,7 @@ async function testQuery(){
 
 module.exports = {
   createTable,
+  createRelationalTable,
   dropTable,
   insertToCategories,
   deleteFromCategoriesByTableName,
