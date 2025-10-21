@@ -1,4 +1,7 @@
 <nav>
+  <% if(title === 'Game' || title ==='Edit Game' || title ==='Add a game') { %>
+  <a href="/games">Back</a>
+  <% } %>
   <a href="/">Home</a>
   <% if(title === 'Games') {%>
     <a href="/games/add">Add a game</a>
