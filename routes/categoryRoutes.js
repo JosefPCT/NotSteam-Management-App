@@ -11,6 +11,7 @@ router.post('/add', controller.categoriesAddPost);
 router.get('/:id', controller.categoriesIdGet);
 router.post('/:id', controller.categoriesIdPost);
 router.get('/:id/add', controller.categoriesIdAddGet);
+router.post('/:id/add', controller.categoriesIdAddPost);
 
 
 module.exports = router;

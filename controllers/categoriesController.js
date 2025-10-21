@@ -46,8 +46,6 @@ exports.categoriesAddGet = async(req, res) => {
 exports.categoriesAddPost = [
   validateAddCategory,
   async(req, res) => {
-    const { table_name, col_name }= req.body;
-
     const errors = validationResult(req);
     if(!errors.isEmpty()){
       return res.status(400).render('pages/categoriesAdd', {
@@ -56,6 +54,8 @@ exports.categoriesAddPost = [
         errors: errors.array(),
       })
     }
+    const { table_name, col_name }= matchedData(req);
+
     if(table_name && col_name){
       await db.createTable(table_name, col_name);
       await db.createRelationalTable(table_name,col_name);
@@ -93,12 +93,18 @@ exports.categoriesIdPost = async(req, res) => {
   res.redirect('/categories');
 };
 
-exports.categoriesIdAddGet = [
+exports.categoriesIdAddGet = async(req, res) => {
+  const { id } = req.params;
+  res.render('pages/categoriesIdAdd', {
+    title: "Add an item",
+    id
+  })
+}
+
+exports.categoriesIdAddPost = [
   async(req, res) => {
     const { id } = req.params;
-    res.render('pages/categoriesIdAdd', {
-      title: "Add an item",
-      id
-    })
+    const { item_name } = req.body;
+    res.send(item_name);
   }
-];
+]
