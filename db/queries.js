@@ -75,13 +75,66 @@ async function dataExistsInTable(table_name, col_name, data){
   }
 }
 
-async function renameTable(old_name, new_name){
+async function renameTable(old_tableName, new_tableName){
   const sql = `
-    ALTER TABLE IF EXISTS ${old_name}
-    RENAME TO ${new_name}
+    ALTER TABLE IF EXISTS ${old_tableName}
+    RENAME TO ${new_tableName};
   `;
 
-  await pool.query(sql, [old_name, new_name]);
+  await pool.query(sql);
+}
+
+async function renameRelationalTable(old_tableName, new_tableName){
+  const sql = `
+    ALTER TABLE IF EXISTS games_${old_tableName} 
+    RENAME TO games_${new_tableName};
+  `;
+
+  await pool.query(sql);
+}
+
+async function renameSequenceTable(old_tableName, new_tableName, old_colName, new_colName){
+  const sql = `
+    ALTER TABLE IF EXISTS ${old_tableName}_${old_colName}_id_seq 
+    RENAME TO ${new_tableName}_${new_colName}_id_seq
+  `;
+
+  await pool.query(sql);
+}
+
+async function renameIdColumn(table_name, old_colName, new_colName){
+  const sql = `
+    ALTER TABLE ${table_name}
+    RENAME COLUMN ${old_colName}_id TO ${new_colName}_id;
+  `;
+
+  await pool.query(sql);
+}
+
+async function renameNameColumn(table_name, old_colName, new_colName){
+  const sql = `
+    ALTER TABLE ${table_name}
+    RENAME COLUMN ${old_colName}_name TO ${new_colName}_name;
+  `;
+
+  await pool.query(sql);
+}
+
+async function renameRelationalIdColumn(table_name, old_colName, new_colName){
+  const sql = `
+    ALTER TABLE games_${table_name}
+    RENAME COLUMN ${old_colName}_id TO ${new_colName}_id;
+  `;
+
+  await pool.query(sql);
+}
+
+async function updateCategories(new_tableName, old_tableName, new_colName){
+  const sql = `
+    UPDATE categories
+    SET table_name = ${new_tableName}, col_name = ${new_colName}
+    WHERE table_name = ${old_tableName};
+  `;
 }
 
 // Categories
@@ -367,6 +420,13 @@ module.exports = {
   dropTable,
   dropRelationalTable,
   dataExistsInTable,
+  renameTable,
+  renameRelationalTable,
+  renameSequenceTable,
+  renameIdColumn,
+  renameNameColumn,
+  renameRelationalIdColumn,
+  updateCategories,
   insertToCategories,
   deleteFromCategoriesByTableName,
   categoryExists,
