@@ -1,9 +1,25 @@
 <form action="<%= action %>" method="post">
     <label for="categoryPlural">Category Name(Plural):</label>
-    <input type="text" name="table_name" id="categoryPlural" required>
+    <input 
+      type="text" 
+      name="table_name" 
+      id="categoryPlural" 
+      required
+      <% if(locals.myCategory) { %>
+        value="<%= myCategory.table_name %>"
+      <% } %>
+    >
 
     <label for="categorySingular">Category Name(Singular):</label>
-    <input type="text" name="col_name" id="categorySingular" required>
+    <input 
+      type="text" 
+      name="col_name" 
+      id="categorySingular" 
+      required
+      <% if(locals.myCategory) { %>
+        value="<%= myCategory.col_name %>"
+      <% } %>
+    >
 
     <button type="submit">Submit</button>
 </form>
