@@ -22,9 +22,9 @@ const isUniqueDataInTable = async(value, { req }) => {
   console.log("Custom validator unique data in table");
   console.log("Check for req.params", req.params);
 
-  const { id } = req.params;
+  const { categoryName } = req.params;
 
-  const categ = await db.getCategoryByTableName(id);
+  const categ = await db.getCategoryByTableName(categoryName);
   console.log(categ);
 
   if(await db.dataExistsInTable(categ.table_name, categ.col_name, value)){
@@ -49,27 +49,27 @@ const validateAddItem = [
 
 // Route handlers
 
-exports.categoriesIndexGet = async(req, res) => {
+exports.indexGet = async(req, res) => {
   const categories = await db.getAllCategories();
 
-  res.render('pages/categoriesIndex', { 
+  res.render('pages/categories/index', { 
     title: 'All Categories',
     categories
   })
 }
 
-exports.categoriesAddGet = async(req, res) => {
-  res.render('pages/categoriesAdd', {
+exports.addGet = async(req, res) => {
+  res.render('pages/categories/add', {
     title: 'Add'
   });
 }
 
-exports.categoriesAddPost = [
+exports.addPost = [
   validateAddCategory,
   async(req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-      return res.status(400).render('pages/categoriesAdd', {
+      return res.status(400).render('pages/categories/add', {
         title: 'Add',
         action: '/add',
         errors: errors.array(),
@@ -87,58 +87,57 @@ exports.categoriesAddPost = [
   }
 ];
 
-exports.categoriesIdGet = async(req, res) => {
-  const { id } = req.params
-  const data = await db.getAllDataByTable(id);
-  const categoryObj = await db.getCategoryByTableName(id);
+exports.categoryNameGet = async(req, res) => {
+  const { categoryName } = req.params
+  const data = await db.getAllDataByTable(categoryName);
+  const categoryObj = await db.getCategoryByTableName(categoryName);
 
-  res.render('pages/categoriesId', {
+  res.render('pages/categories/categoryName', {
     title: `All ${categoryObj.table_name}`,
     categoryObj,
     data,
   })
 }
 
-exports.categoriesIdPost = async(req, res) => {
+exports.categoryNamePost = async(req, res) => {
   const { _method } = req.body;
-  const { id } = req.params;
-  console.log(id);
+  const { categoryName } = req.params;
 
   if( _method && _method === 'DELETE'){
     console.log("Dropping table...");
     await db.dropRelationalTable(id);
     await db.dropTable(id);
-    await db.deleteFromCategoriesByTableName(id);
+    await db.deleteFromCategoriesByTableName(categoryName);
   }
 
   res.redirect('/categories');
 };
 
-exports.categoriesIdAddGet = async(req, res) => {
-  const { id } = req.params;
-  res.render('pages/categoriesIdAdd', {
+exports.categoryNameAddGet = async(req, res) => {
+  const { categoryName } = req.params;
+  res.render('pages/categories/categoryNameAdd', {
     title: "Add an item",
-    id
+    categoryName
   })
 }
 
-exports.categoriesIdAddPost = [
+exports.categoryNameAddPost = [
   validateAddItem,
   async(req, res) => {
-    const { id } = req.params;
+    const { categoryName } = req.params;
     const errors = validationResult(req);
     if(!errors.isEmpty()){
-      return res.status(400).render('pages/categoriesIdAdd', {
+      return res.status(400).render('pages/categories/categoryNameAdd', {
         title: 'Add an item',
-        id,
+        categoryName,
         action: '/add',
         errors: errors.array(),
       })
     }
     const { item_name }= matchedData(req);
-    const categ = await db.getCategoryByTableName(id);
+    const categ = await db.getCategoryByTableName(categoryName);
     await db.insertDataToTable(categ.table_name, categ.col_name, item_name);
 
-    res.redirect(`/categories/${id}`);
+    res.redirect(`/categories/${categoryName}`);
   }
 ]

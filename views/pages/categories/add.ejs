@@ -1,7 +1,7 @@
-<%- include('../partials/header') %>
+<%- include('../../partials/header') %>
 <main>
     <h1>Add Category</h1>
-    <%- include("../partials/errors.ejs") %>
+    <%- include("../../partials/errors.ejs") %>
     <form action="/categories/add" method="post">
         <label for="categoryPlural">Category Name(Plural):</label>
         <input type="text" name="table_name" id="categoryPlural" required>
@@ -12,4 +12,4 @@
         <button type="submit">Submit</button>
     </form>
 </main>
-<%- include('../partials/footer') %>
+<%- include('../../partials/footer') %>

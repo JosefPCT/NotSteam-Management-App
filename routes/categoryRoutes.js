@@ -4,14 +4,16 @@ const controller = require('../controllers/categoriesController.js');
 
 const router = express.Router();
 
-router.get('/', controller.categoriesIndexGet);
+router.get('/', controller.indexGet);
 
-router.get('/add', controller.categoriesAddGet);
-router.post('/add', controller.categoriesAddPost);
-router.get('/:id', controller.categoriesIdGet);
-router.post('/:id', controller.categoriesIdPost);
-router.get('/:id/add', controller.categoriesIdAddGet);
-router.post('/:id/add', controller.categoriesIdAddPost);
+router.get('/add', controller.addGet);
+router.post('/add', controller.addPost);
+
+router.get('/:categoryName', controller.categoryNameGet);
+router.post('/:categoryName', controller.categoryNamePost);
+
+router.get('/:categoryName/add', controller.categoryNameAddGet);
+router.post('/:categoryName/add', controller.categoryNameAddPost);
 
 
 module.exports = router;
