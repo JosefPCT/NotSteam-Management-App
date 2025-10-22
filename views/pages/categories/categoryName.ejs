@@ -4,6 +4,7 @@
     <a href="/categories/<%= categoryObj.table_name %>/add">Add an item</a>
     <% if(locals.data) { %>
       <% let columnName =  categoryObj.col_name + '_name' %>
+      <% let columnId = categoryObj.col_name + '_id' %>
       <div>
         <% data.forEach((item) => { %>
         <% console.log(columnName) %>
@@ -11,6 +12,10 @@
             <a href="/games?category=<%= categoryObj.table_name %>&searchString=<%= item[columnName] %>">
                 <%= item[columnName] %>
             </a>
+            <form action="/categories/<%= categoryObj.table_name %>/<%= item[columnId] %>" method="POST">
+              <input type="hidden" name="_method" value="DELETE">
+              <button type="submit">Delete</button>
+            </form>
         </div>
         <% }) %>  
       </div>

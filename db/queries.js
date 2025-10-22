@@ -33,6 +33,16 @@ async function insertDataToTable(table_name, col_name, data){
   await pool.query(sql, [data]);
 }
 
+// data should be the id of the column
+async function deleteDataFromTableById(table_name, col_name, data){
+  const sql = `
+    DELETE FROM ${table_name}
+    WHERE ${col_name}_id = $1
+  `;
+
+  await pool.query(sql, [data]);
+}
+
 async function dropTable(table_name){
   const sql = `
     DROP TABLE ${table_name};
@@ -344,6 +354,7 @@ module.exports = {
   createTable,
   createRelationalTable,
   insertDataToTable,
+  deleteDataFromTableById,
   dropTable,
   dropRelationalTable,
   dataExistsInTable,

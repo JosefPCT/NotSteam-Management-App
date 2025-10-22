@@ -141,3 +141,17 @@ exports.categoryNameAddPost = [
     res.redirect(`/categories/${categoryName}`);
   }
 ]
+
+exports.categNameItemIdPost = async(req, res) => {
+  const { _method } = req.body;
+  const { categoryName, itemId } = req.params;
+
+    if( _method && _method === 'DELETE'){
+      console.log("Deleting data in table...");
+      const categ = await db.getCategoryByTableName(categoryName);
+      await db.deleteDataFromTableById(categ.table_name, categ.col_name, itemId);
+  }
+
+  // res.send("Trying to delete");
+  res.redirect(`/categories/${categoryName}`);
+}

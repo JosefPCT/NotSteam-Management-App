@@ -15,5 +15,7 @@ router.post('/:categoryName', controller.categoryNamePost);
 router.get('/:categoryName/add', controller.categoryNameAddGet);
 router.post('/:categoryName/add', controller.categoryNameAddPost);
 
+router.post('/:categoryName/:itemId', controller.categNameItemIdPost);
+
 
 module.exports = router;
