@@ -6,6 +6,7 @@ const { body, validationResult, matchedData } = require("express-validator");
 // Validation
 
 const existingCategoryErr = 'Category already exists, category must be a unique value'
+const existingDataErr = 'Data already exists';
 const notEmptyErr = "must not be empty";
 
 //
@@ -13,6 +14,21 @@ const isUniqueCategory = async (value) => {
   const gameExists = await db.categoryExists(value);
   if(gameExists){
     throw new Error (existingCategoryErr);
+  }
+  return true;
+}
+
+const isUniqueDataInTable = async(value, { req }) => {
+  console.log("Custom validator unique data in table");
+  console.log("Check for req.params", req.params);
+
+  const { id } = req.params;
+
+  const categ = await db.getCategoryByTableName(id);
+  console.log(categ);
+
+  if(await db.dataExistsInTable(categ.table_name, categ.col_name, value)){
+    throw new Error (existingDataErr);
   }
   return true;
 }
@@ -25,6 +41,11 @@ const validateAddCategory = [
     .notEmpty().withMessage(`Category Name(Singular) ${notEmptyErr}`)
     
 ];
+
+const validateAddItem = [
+  body("item_name").trim()
+    .custom(isUniqueDataInTable)
+]
 
 // Route handlers
 
@@ -102,9 +123,22 @@ exports.categoriesIdAddGet = async(req, res) => {
 }
 
 exports.categoriesIdAddPost = [
+  validateAddItem,
   async(req, res) => {
     const { id } = req.params;
-    const { item_name } = req.body;
-    res.send(item_name);
+    const errors = validationResult(req);
+    if(!errors.isEmpty()){
+      return res.status(400).render('pages/categoriesIdAdd', {
+        title: 'Add an item',
+        id,
+        action: '/add',
+        errors: errors.array(),
+      })
+    }
+    const { item_name }= matchedData(req);
+    const categ = await db.getCategoryByTableName(id);
+    await db.insertDataToTable(categ.table_name, categ.col_name, item_name);
+
+    res.redirect(`/categories/${id}`);
   }
 ]

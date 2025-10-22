@@ -28,6 +28,7 @@ async function insertDataToTable(table_name, col_name, data){
     INSERT INTO ${table_name}(${col_name}_name) VALUES
     ($1)
   `;
+  console.log(sql);
 
   await pool.query(sql, [data]);
 }
@@ -56,10 +57,11 @@ async function dataExistsInTable(table_name, col_name, data){
   `;
 
   const { rows } = await pool.query(sql, [data]);
-  if(rows[0].length ===  0 ){
-    return false
+  console.log(rows);
+  if(rows.length ===  0 ){
+    return false;
   } else {
-    return true
+    return true;
   }
 }
 
@@ -341,8 +343,10 @@ async function testQuery(){
 module.exports = {
   createTable,
   createRelationalTable,
+  insertDataToTable,
   dropTable,
   dropRelationalTable,
+  dataExistsInTable,
   insertToCategories,
   deleteFromCategoriesByTableName,
   categoryExists,
