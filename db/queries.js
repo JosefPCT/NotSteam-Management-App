@@ -75,6 +75,15 @@ async function dataExistsInTable(table_name, col_name, data){
   }
 }
 
+async function renameTable(old_name, new_name){
+  const sql = `
+    ALTER TABLE IF EXISTS ${old_name}
+    RENAME TO ${new_name}
+  `;
+
+  await pool.query(sql, [old_name, new_name]);
+}
+
 // Categories
 
 // INSERT to categories table
