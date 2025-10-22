@@ -60,7 +60,8 @@ exports.indexGet = async(req, res) => {
 
 exports.addGet = async(req, res) => {
   res.render('pages/categories/add', {
-    title: 'Add'
+    title: 'Add',
+    action: '/categories/add'
   });
 }
 
