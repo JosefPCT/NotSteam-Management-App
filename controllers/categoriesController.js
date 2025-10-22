@@ -152,6 +152,5 @@ exports.categNameItemIdPost = async(req, res) => {
       await db.deleteDataFromTableById(categ.table_name, categ.col_name, itemId);
   }
 
-  // res.send("Trying to delete");
   res.redirect(`/categories/${categoryName}`);
 }
