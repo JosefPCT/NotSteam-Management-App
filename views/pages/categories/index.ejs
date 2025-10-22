@@ -7,10 +7,10 @@
         <div class="card flex-SpaceBetween">
             <a href="/categories/<%= category.table_name %>">By <%= category.table_name %> </a> 
             <div class="row">
-                <a href="/categories/<%= category.table_name %>/edit">
-                    <button>Edit</button>
-                </a>
                 <% if(!(category.table_name === 'developers' || category.table_name === 'genres')) { %>
+                    <a href="/categories/<%= category.table_name %>/edit">
+                      <button>Edit</button>
+                    </a>
                     <form action="/categories/<%= category.table_name %>" method="POST">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit">Delete</button>
