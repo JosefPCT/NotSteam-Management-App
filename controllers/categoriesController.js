@@ -106,8 +106,8 @@ exports.categoryNamePost = async(req, res) => {
 
   if( _method && _method === 'DELETE'){
     console.log("Dropping table...");
-    await db.dropRelationalTable(id);
-    await db.dropTable(id);
+    await db.dropRelationalTable(categoryName);
+    await db.dropTable(categoryName);
     await db.deleteFromCategoriesByTableName(categoryName);
   }
 
