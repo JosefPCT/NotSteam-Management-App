@@ -15,6 +15,9 @@ router.post('/:categoryName', controller.categoryNamePost);
 router.get('/:categoryName/add', controller.categoryNameAddGet);
 router.post('/:categoryName/add', controller.categoryNameAddPost);
 
+router.get('/:categoryName/edit', controller.categoryNameEditGet);
+router.post('/:categoryName/edit', controller.categoryNameEditPost);
+
 router.post('/:categoryName/:itemId', controller.categNameItemIdPost);
 
 

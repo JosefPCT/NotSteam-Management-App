@@ -142,6 +142,23 @@ exports.categoryNameAddPost = [
   }
 ]
 
+exports.categoryNameEditGet = async(req, res) => {
+  const { categoryName } = req.params;
+
+  const category = await db.getCategoryByTableName(categoryName);
+
+  res.render('pages/categories/categoryNameEdit', {
+    title: 'Edit a category',
+    category
+  })
+}
+
+exports.categoryNameEditPost = [
+  async(req, res) => {
+    res.end();
+  }
+]
+
 exports.categNameItemIdPost = async(req, res) => {
   const { _method } = req.body;
   const { categoryName, itemId } = req.params;
