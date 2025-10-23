@@ -148,7 +148,8 @@ exports.categoryNameAddGet = async(req, res) => {
   const { categoryName } = req.params;
   res.render('pages/categories/categoryNameAdd', {
     title: "Add an item",
-    categoryName
+    categoryName,
+    action: `/categories/${categoryName}/add`
   })
 }
 
@@ -161,7 +162,7 @@ exports.categoryNameAddPost = [
       return res.status(400).render('pages/categories/categoryNameAdd', {
         title: 'Add an item',
         categoryName,
-        action: '/add',
+        action: `/categories/${categoryName}/add`,
         errors: errors.array(),
       })
     }
