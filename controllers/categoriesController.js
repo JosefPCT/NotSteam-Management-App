@@ -275,6 +275,7 @@ exports.categNameItemIdEditPost = [
   const { categoryName, itemId } = req.params;
   const myCategory = await db.getCategoryByTableName(categoryName);
   const myItem = await db.getItemDataByTableAndId(myCategory.table_name, myCategory.col_name, itemId);
+  const errors = validationResult(req);
   if(!errors.isEmpty()){
     return res.status(400).render('pages/categories/categoryNameItemIdEdit', {
       title: 'Edit an item',
@@ -287,6 +288,9 @@ exports.categNameItemIdEditPost = [
     })
   }
 
+  const { item_name } = matchedData(req);
+
+  await db.updateItemDataByTableAndId(myCategory.table_name, myCategory.col_name, itemId, item_name);
   res.redirect(`/categories/${categoryName}`);
   }
 ];

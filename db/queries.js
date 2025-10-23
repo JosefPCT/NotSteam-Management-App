@@ -151,6 +151,17 @@ async function getItemDataByTableAndId(table_name, col_name, id){
   return rows[0];
 }
 
+async function updateItemDataByTableAndId(table_name, col_name, id, data){
+  const sql = `
+    UPDATE ${table_name}
+    SET ${col_name}_name = $2
+    WHERE ${col_name}_id = $1;
+  `;
+
+  await pool.query(sql, [id, data]);
+}
+
+
 // Older Queries
 
 // Categories
@@ -435,6 +446,7 @@ module.exports = {
   renameRelationalIdColumn,
   updateCategories,
   getItemDataByTableAndId,
+  updateItemDataByTableAndId,
   insertToCategories,
   deleteFromCategoriesByTableName,
   categoryExists,
