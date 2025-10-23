@@ -6,8 +6,8 @@ const { body, validationResult, matchedData } = require("express-validator");
 // Validation
 
 const existingCategoryErr = 'Category already exists, category must be a unique value'
+const existingDataErr = 'Item already exists in the table, item must be a unique value';
 const sameCategoryErr = `You didn't change anything`;
-const existingDataErr = 'Data already exists';
 const notEmptyErr = "must not be empty";
 
 // Custom validators
@@ -53,7 +53,18 @@ const isUniqueDataInTable = async(value, { req }) => {
 }
 
 const isNotSameAndUniqueDataInTable = async(value, { req }) => {
-  
+  const { categoryName, itemId } = req.params;
+
+  const category = await db.getCategoryByTableName(categoryName);
+  const item = await db.getItemDataByTableAndId(category.table_name, category.col_name, itemId);
+  const col_name = `${category.col_name}_name`;
+
+  if(value !== item[col_name]){
+    if(await db.dataExistsInTable(category.table_name, category.col_name, value)){
+      throw new Error(existingDataErr);
+    }
+  }
+  return true;
 }
 
 
@@ -80,6 +91,11 @@ const validateEditCategory = [
     .custom(isNotSameAndUniqueCategory),
   body("col_name").trim()
     .notEmpty().withMessage(`Category Name(Singular) ${notEmptyErr}`)
+]
+
+const validateEditItem = [
+  body("item_name").trim()
+    .custom(isNotSameAndUniqueDataInTable)
 ]
 
 // Route handlers
@@ -254,10 +270,23 @@ exports.categNameItemIdEditGet = async(req, res) => {
 }
 
 exports.categNameItemIdEditPost = [
+  validateEditItem,
   async(req, res) => {
   const { categoryName, itemId } = req.params;
   const myCategory = await db.getCategoryByTableName(categoryName);
   const myItem = await db.getItemDataByTableAndId(myCategory.table_name, myCategory.col_name, itemId);
-  res.send('Post Route of editing');
+  if(!errors.isEmpty()){
+    return res.status(400).render('pages/categories/categoryNameItemIdEdit', {
+      title: 'Edit an item',
+      categoryName,
+      itemId,
+      myCategory,
+      myItem,
+      action: `/categories/${categoryName}/${itemId}/edit`,
+      errors: errors.array(),
+    })
+  }
+
+  res.redirect(`/categories/${categoryName}`);
   }
 ];
