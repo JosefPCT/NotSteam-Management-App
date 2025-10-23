@@ -8,7 +8,7 @@
       <div>
         <% data.forEach((item) => { %>
         <% console.log(columnName) %>
-        <div class="card">
+        <div class="card flex-SpaceBetween">
             <a href="/games?category=<%= categoryObj.table_name %>&searchString=<%= item[columnName] %>">
                 <%= item[columnName] %>
             </a>

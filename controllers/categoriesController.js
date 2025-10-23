@@ -231,5 +231,8 @@ exports.categNameItemIdPost = async(req, res) => {
 }
 
 exports.categNameItemIdEditGet = async(req, res) => {
+  const { categoryName, itemId } = req.params;
+  console.log(categoryName);
+  console.log(itemId);
   res.send('Edit Item');
 }
