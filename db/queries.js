@@ -132,9 +132,11 @@ async function renameRelationalIdColumn(table_name, old_colName, new_colName){
 async function updateCategories(new_tableName, old_tableName, new_colName){
   const sql = `
     UPDATE categories
-    SET table_name = ${new_tableName}, col_name = ${new_colName}
-    WHERE table_name = ${old_tableName};
+    SET table_name = '${new_tableName}', col_name = '${new_colName}'
+    WHERE LOWER(table_name) = LOWER($1);
   `;
+
+  await pool.query(sql, [old_tableName]);
 }
 
 // Categories
@@ -170,15 +172,6 @@ async function getAllCategories(){
   return rows;
 }
 
-async function getAllCategories(){
-  const sql = `
-    SELECT *
-    FROM categories;
-  `;
-
-  const { rows } = await pool.query(sql);
-  return rows;
-}
 
 async function getCategoryByTableName(table){
   const sql = `

@@ -192,6 +192,7 @@ exports.categoryNameEditPost = [
     const { categoryName } = req.params;
     const myCategory = await db.getCategoryByTableName(categoryName);
     const errors = validationResult(req);
+
     if(!errors.isEmpty()){
       return res.status(400).render('pages/categories/categoryNameEdit', {
         title: 'Edit a category',
@@ -201,7 +202,18 @@ exports.categoryNameEditPost = [
         errors: errors.array(),
       })
     }
+    // Use `myCategory` for old table name and column name
+    const { table_name, col_name } = matchedData(req);
+
+    await db.renameTable(myCategory.table_name, table_name);
+    await db.renameRelationalTable(myCategory.table_name, table_name);
+    await db.renameSequenceTable(myCategory.table_name, table_name, myCategory.col_name, col_name);
+    await db.renameIdColumn(table_name, myCategory.col_name, col_name);
+    await db.renameNameColumn(table_name, myCategory.col_name, col_name);
+    await db.renameRelationalIdColumn(table_name, myCategory.col_name, col_name);
+    await db.updateCategories(table_name, myCategory.table_name, col_name);
     
+    res.redirect('/categories');
   }
 ]
 
