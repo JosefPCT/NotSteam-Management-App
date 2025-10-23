@@ -1,0 +1,28 @@
+<%- include('../../partials/header') %>
+<main>
+    <h1>Showing All Categories</h1>
+    <% if(locals.categories) { %>
+      <div class="container">
+      <% categories.forEach((category) => { %>
+        <div class="card flex-SpaceBetween">
+            <a href="/categories/<%= category.table_name %>">By <%= category.table_name %> </a> 
+            <div class="row">
+                <% if(!(category.table_name === 'developers' || category.table_name === 'genres')) { %>
+                    <a href="/categories/<%= category.table_name %>/edit">
+                      <button>Edit</button>
+                    </a>
+                    <form action="/categories/<%= category.table_name %>" method="POST">
+                        <input type="hidden" name="_method" value="DELETE">
+                        <button type="submit">Delete</button>
+                    </form>
+                <% } %>
+            </div>
+        </div>
+      <% }) %>
+      </div>
+    <% } %>
+    <a href="/categories/add">
+        <button>Add a category</button>
+    </a>
+</main>
+<%- include('../../partials/footer') %>

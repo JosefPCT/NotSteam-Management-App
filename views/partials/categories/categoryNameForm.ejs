@@ -1,0 +1,15 @@
+<form action="<%= action %>" method="post">
+    <label for="item_name">Item Name:</label>
+    <input 
+      type="text" 
+      name="item_name" 
+      id="item_name"
+      
+      <% if(locals.myItem && locals.myCategory) { %>
+        <% const col_name = `${myCategory.col_name}_name` %>
+        value="<%= myItem[col_name] %>"
+      <% } %>
+    >
+
+    <button type="submit">Submit</button>
+</form>

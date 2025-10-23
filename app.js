@@ -4,6 +4,7 @@ const path = require('path');
 //Importing/requiring files
 const indexRouter = require('./routes/indexRoutes');
 const gamesRouter = require('./routes/gamesRoutes');
+const categoriesRouter = require('./routes/categoryRoutes');
 
 const PORT = process.env.PORT || 3000;
 const app = express();
@@ -19,6 +20,7 @@ app.use(express.urlencoded( {extended: true}));
 
 app.use('/', indexRouter);
 app.use('/games', gamesRouter);
+app.use('/categories', categoriesRouter);
 
 
 app.listen(PORT, () => {
