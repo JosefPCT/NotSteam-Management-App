@@ -229,3 +229,7 @@ exports.categNameItemIdPost = async(req, res) => {
 
   res.redirect(`/categories/${categoryName}`);
 }
+
+exports.categNameItemIdEditGet = async(req, res) => {
+  res.send('Edit Item');
+}

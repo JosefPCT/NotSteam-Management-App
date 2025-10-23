@@ -20,5 +20,7 @@ router.post('/:categoryName/edit', controller.categoryNameEditPost);
 
 router.post('/:categoryName/:itemId', controller.categNameItemIdPost);
 
+router.get('/:categoryName/:itemId/edit', controller.categNameItemIdEditGet);
+
 
 module.exports = router;
