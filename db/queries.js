@@ -148,7 +148,7 @@ async function getItemDataByTableAndId(table_name, col_name, id){
   `;
 
   const { rows } = await pool.query(sql, [id]);
-  return rows;
+  return rows[0];
 }
 
 // Older Queries
