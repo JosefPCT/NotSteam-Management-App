@@ -19,20 +19,6 @@ const isUniqueCategory = async (value) => {
   return true;
 }
 
-const isUniqueDataInTable = async(value, { req }) => {
-  console.log("Custom validator unique data in table");
-  console.log("Check for req.params", req.params);
-
-  const { categoryName } = req.params;
-
-  const categ = await db.getCategoryByTableName(categoryName);
-  console.log(categ);
-
-  if(await db.dataExistsInTable(categ.table_name, categ.col_name, value)){
-    throw new Error (existingDataErr);
-  }
-  return true;
-}
 
 const isNotSameAndUniqueCategory = async(value, { req }) => {
   console.log("Custom validator for checking when editing a category, must not be the same category and new category must not exists in the 'categories' table ");
@@ -49,6 +35,25 @@ const isNotSameAndUniqueCategory = async(value, { req }) => {
   // }
 
   return true;
+}
+
+const isUniqueDataInTable = async(value, { req }) => {
+  console.log("Custom validator unique data in table");
+  console.log("Check for req.params", req.params);
+
+  const { categoryName } = req.params;
+
+  const categ = await db.getCategoryByTableName(categoryName);
+  console.log(categ);
+
+  if(await db.dataExistsInTable(categ.table_name, categ.col_name, value)){
+    throw new Error (existingDataErr);
+  }
+  return true;
+}
+
+const isNotSameAndUniqueDataInTable = async(value, { req }) => {
+  
 }
 
 
@@ -246,5 +251,13 @@ exports.categNameItemIdEditGet = async(req, res) => {
     myCategory,
     myItem,
   })
-
 }
+
+exports.categNameItemIdEditPost = [
+  async(req, res) => {
+  const { categoryName, itemId } = req.params;
+  const myCategory = await db.getCategoryByTableName(categoryName);
+  const myItem = await db.getItemDataByTableAndId(myCategory.table_name, myCategory.col_name, itemId);
+  res.send('Post Route of editing');
+  }
+];
