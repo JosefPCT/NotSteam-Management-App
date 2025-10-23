@@ -233,7 +233,9 @@ exports.categNameItemIdPost = async(req, res) => {
 
 exports.categNameItemIdEditGet = async(req, res) => {
   const { categoryName, itemId } = req.params;
-  const myItem = 'test';
+
+  const myCategory = await db.getCategoryByTableName(categoryName);
+  const myItem = await db.getItemDataByTableAndId(myCategory.table_name, myCategory.col_name, itemId);
   res.render('pages/categories/categoryNameItemIdEdit', {
     title: 'Edit an item',
     categoryName,
