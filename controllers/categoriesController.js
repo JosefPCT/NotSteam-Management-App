@@ -233,7 +233,13 @@ exports.categNameItemIdPost = async(req, res) => {
 
 exports.categNameItemIdEditGet = async(req, res) => {
   const { categoryName, itemId } = req.params;
-  console.log(categoryName);
-  console.log(itemId);
-  res.send('Edit Item');
+  const myItem = 'test';
+  res.render('pages/categories/categoryNameItemIdEdit', {
+    title: 'Edit an item',
+    categoryName,
+    itemId,
+    action: `/categories/${categoryName}/${itemId}/edit`,
+    myItem,
+  })
+
 }
