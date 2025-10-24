@@ -72,25 +72,6 @@ exports.gamesIndexGet = async(req, res) => {
     games = await db.getGames();
   }
 
-  // games.forEach(async (game, ind) => {
-  //   console.log("Iterating through games object...");
-  //   console.log(game);
-  //   console.log(ind);
-  //   categories.forEach(async (category, ind2) => {
-  //     console.log("Iterating through categories/tables");
-  //     console.log("Showing current game");
-  //     console.log(game);
-
-  //     let data = await db.getRelationalDataByTableAndId(category.table_name, category.col_name, game.game_id);
-  //     console.log("Showing data...");
-  //     console.log(data);
-  //     let table = category.table_name;
-  //     console.log(table);
-  //     games[ind][table] = data;
-  //     console.log("Showing games object");
-  //     console.log(games);
-  //   });
-  // });
 
   for (const [ind, game] of games.entries()){
     console.log("Iterating through games object using for...of");
@@ -113,26 +94,25 @@ exports.gamesIndexGet = async(req, res) => {
       console.log("Showing games object");
       console.log(games);
     }
-    console.log("Showing game object")
-    console.log(game);
-    console.log("Showing game object's categories");
-    console.log(game.categories);
-    for (const [ind, category] of game.categories.entries()){
-      console.log("showing current category data", category.data);
-      console.log("length", category.data.length);
-     category.data.forEach((item) => {
-      // console.log('showing current item', item);
-      // console.log('showing current',category.data)
-      if(category){
-        console.log('has object')
-      } else {
-        console.log('has not object');
-      }
-     })
-    }
+    // console.log("Showing game object")
+    // console.log(game);
+    // console.log("Showing game object's categories");
+    // console.log(game.categories);
+    // for (const [ind, category] of game.categories.entries()){
+    //   console.log("showing current category data", category.data);
+    //   console.log("length", category.data.length);
+    //  category.data.forEach((item) => {
+    //   // console.log('showing current item', item);
+    //   // console.log('showing current',category.data)
+    //   if(category){
+    //     console.log('has object')
+    //   } else {
+    //     console.log('has not object');
+    //   }
+    //  })
+    // }
   }
 
-  // console.log('Completed object');
   // console.log(games);
   // let testProp = categories[0].table_name;
   // games[0][testProp] = 'test prop';
