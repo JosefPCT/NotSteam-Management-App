@@ -161,6 +161,24 @@ async function updateItemDataByTableAndId(table_name, col_name, id, data){
   await pool.query(sql, [id, data]);
 }
 
+async function getRelationalDataByTableAndId(table_name, col_name, game_id){
+  const sql = `
+    SELECT at.*
+    FROM games g
+    JOIN games_${table_name} art ON g.game_id = art.game_id
+    JOIN ${table_name} at ON at.${col_name}_id = art.${col_name}_id
+    WHERE g.game_id = $1;
+  `;
+
+  console.log(sql);
+  const { rows } = await pool.query(sql, [game_id]);
+  console.log("returning row");
+  console.log(rows);
+  if(rows){
+    return rows
+  }
+}
+
 
 // Older Queries
 
@@ -447,6 +465,7 @@ module.exports = {
   updateCategories,
   getItemDataByTableAndId,
   updateItemDataByTableAndId,
+  getRelationalDataByTableAndId,
   insertToCategories,
   deleteFromCategoriesByTableName,
   categoryExists,

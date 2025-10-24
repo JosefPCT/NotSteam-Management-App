@@ -16,18 +16,36 @@
       </form>
     </div>
   
-    <div>
+    <div class="container">
       <% if(locals.games) { %>
         <% games.forEach(game => { %>
-          <div class="row card">
-            <a href="/games/<%=game.game_id %>"><%= game.game_name %></a>
-                <a href="/games/<%= game.game_id %>/edit">
-                  <button>Edit</button>
-                </a>
-            <form action="/games/<%= game.game_id %>" method="POST">
-              <input type="hidden" name="_method" value="DELETE">
-              <button type="submit">Delete</button>
-            </form>
+          <div class="card">
+              <a href="/games/<%=game.game_id %>"><%= game.game_name %></a>
+
+              <% game.categories.forEach(category => { %> 
+                  <% if(category.data.length !== 0) { %>
+                    
+                      <p>
+                      <%= category.table_name %>:
+                      <% category.data.forEach(data => { %>
+                        <div class="card-small"><%= data[category.col_name + '_name'] %></div>
+                      <% }) %>
+                      </p>
+                  <% } %>
+                
+              <% }) %>
+
+
+
+            <div class="row">
+              <a href="/games/<%= game.game_id %>/edit">
+                <button>Edit</button>
+              </a>
+              <form action="/games/<%= game.game_id %>" method="POST">
+                <input type="hidden" name="_method" value="DELETE">
+                <button type="submit">Delete</button>
+              </form>
+            </div>
           </div>
         <% }); %>
       <% } %>
