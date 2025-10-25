@@ -170,10 +170,10 @@ async function getRelationalDataByTableAndId(table_name, col_name, game_id){
     WHERE g.game_id = $1;
   `;
 
-  console.log(sql);
+  // console.log(sql);
   const { rows } = await pool.query(sql, [game_id]);
-  console.log("returning row");
-  console.log(rows);
+  // console.log("returning row");
+  // console.log(rows);
   if(rows){
     return rows
   }

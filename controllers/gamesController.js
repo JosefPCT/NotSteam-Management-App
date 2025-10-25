@@ -59,10 +59,14 @@ exports.gamesIndexGet = async(req, res) => {
 
   const { category, searchString } = req.query; 
 
+  let query = [];
   let games;
+
   if(category && searchString){
     // console.log('has a category', category);
     // console.log('has a searchString', searchString);
+    query.push({ category : category , searchString: searchString});
+    
     if(category === 'games'){
       games = await db.searchGameByName(searchString);
     } else {
@@ -71,29 +75,31 @@ exports.gamesIndexGet = async(req, res) => {
   } else {
     games = await db.getGames();
   }
+  
 
-
+  // Mutating 'games' object, iterating through 'games' and iterating through 'categories' object to get data for each game
   for (const [ind, game] of games.entries()){
-    console.log("Iterating through games object using for...of");
-    console.log(game);
-    console.log(ind)
+    // console.log("Iterating through games object using for...of");
+    // console.log(game);
+    // console.log(ind)
     games[ind].categories = [];
     for (const [ind2, category] of categories.entries()){
-      console.log("Iterating through categories/tables");
-      console.log('Showing game', game);
+      // console.log("Iterating through categories/tables");
+      // console.log('Showing game', game);
 
       let data = await db.getRelationalDataByTableAndId(category.table_name, category.col_name, game.game_id);
-      console.log("Showing data...");
-      console.log(data);
+      // console.log("Showing data...");
+      // console.log(data);
       // let table = category.table_name;
       // console.log(table);
       let catName = 'categories';
       // games[ind][catName][category.table_name] = data;
       // games[ind][catName].push({ name: category.table_name, [category.table_name] : data });
       games[ind][catName].push({ table_name: category.table_name, col_name: category.col_name, data });
-      console.log("Showing games object");
-      console.log(games);
+      // console.log("Showing games object");
+      // console.log(games);
     }
+    // Test code to get structure of object
     // console.log("Showing game object")
     // console.log(game);
     // console.log("Showing game object's categories");
@@ -113,15 +119,19 @@ exports.gamesIndexGet = async(req, res) => {
     // }
   }
 
+  // Test code to figure out how to declare objects through bracket notation
   // console.log(games);
   // let testProp = categories[0].table_name;
   // games[0][testProp] = 'test prop';
   // console.log("First game", games[0]);
   // console.log("Games:", games);
+
+
   res.render('pages/indexGames', {
     title: 'Games',
     categories,
-    games: games
+    games: games,
+    query: query[0]
   });
 }
 

@@ -1,5 +1,11 @@
 <%- include('../partials/header') %>
-  <h1>List of All Games</h1>
+  <h1>
+    <% if(query.length !== 0) { %>
+      Showing games that has <%= query.searchString %> in <%= query.category %>
+    <% } else { %>
+      Showing all games
+    <% } %>
+  </h1>
   <main>
     <div>
       <form action="/games" method="get" class="searchbar">
