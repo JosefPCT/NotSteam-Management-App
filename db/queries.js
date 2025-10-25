@@ -1,6 +1,9 @@
 const pool = require('./pool');
 
 // Table Creation
+
+// Create a dynamic table based on passed parameters
+// Used in creating a table for a new category
 async function createTable(table_name, col_name){
 
   const sql = `
@@ -12,6 +15,8 @@ async function createTable(table_name, col_name){
   await pool.query(sql);
 }
 
+// Creates a dynamic relational table based on passed parameters
+// Used in conjunction with 'createTable', to create a connection with the main table 'games'
 async function createRelationalTable(table_name, col_name){
   const sql = `
     CREATE TABLE games_${table_name}(
@@ -23,6 +28,7 @@ async function createRelationalTable(table_name, col_name){
   await pool.query(sql);
 }
 
+// Inserts data based on table name and column name of a category
 async function insertDataToTable(table_name, col_name, data){
   const sql = `
     INSERT INTO ${table_name}(${col_name}_name) VALUES
@@ -33,6 +39,7 @@ async function insertDataToTable(table_name, col_name, data){
   await pool.query(sql, [data]);
 }
 
+// Deletes data, based on the table name and the id of the row
 // data should be the id of the column
 async function deleteDataFromTableById(table_name, col_name, data){
   const sql = `
@@ -43,6 +50,8 @@ async function deleteDataFromTableById(table_name, col_name, data){
   await pool.query(sql, [data]);
 }
 
+// Completely drop a table from the database
+// Used on DELETE processes
 async function dropTable(table_name){
   const sql = `
     DROP TABLE ${table_name};
@@ -51,6 +60,7 @@ async function dropTable(table_name){
   await pool.query(sql);
 }
 
+// Drops a created dynamic relational table
 async function dropRelationalTable(table_name){
   const sql = `
     DROP TABLE games_${table_name};
@@ -59,6 +69,7 @@ async function dropRelationalTable(table_name){
   await pool.query(sql);
 }
 
+// Query to check if data already exists on a specific table, returns true or false
 async function dataExistsInTable(table_name, col_name, data){
   const sql = `
     SELECT 1
@@ -75,6 +86,7 @@ async function dataExistsInTable(table_name, col_name, data){
   }
 }
 
+// Rename a table
 async function renameTable(old_tableName, new_tableName){
   const sql = `
     ALTER TABLE IF EXISTS ${old_tableName}
@@ -84,6 +96,7 @@ async function renameTable(old_tableName, new_tableName){
   await pool.query(sql);
 }
 
+// Renames a created relational table based on 'games' table
 async function renameRelationalTable(old_tableName, new_tableName){
   const sql = `
     ALTER TABLE IF EXISTS games_${old_tableName} 
@@ -93,6 +106,7 @@ async function renameRelationalTable(old_tableName, new_tableName){
   await pool.query(sql);
 }
 
+// Renames the automatically created sequence table when using GENERATED ALWAYS AS IDENTITY constraint
 async function renameSequenceTable(old_tableName, new_tableName, old_colName, new_colName){
   const sql = `
     ALTER TABLE IF EXISTS ${old_tableName}_${old_colName}_id_seq 
@@ -102,6 +116,7 @@ async function renameSequenceTable(old_tableName, new_tableName, old_colName, ne
   await pool.query(sql);
 }
 
+// Renames the id column of a certain table
 async function renameIdColumn(table_name, old_colName, new_colName){
   const sql = `
     ALTER TABLE ${table_name}
@@ -111,6 +126,7 @@ async function renameIdColumn(table_name, old_colName, new_colName){
   await pool.query(sql);
 }
 
+// Renames the name column of a certain table
 async function renameNameColumn(table_name, old_colName, new_colName){
   const sql = `
     ALTER TABLE ${table_name}
@@ -120,6 +136,7 @@ async function renameNameColumn(table_name, old_colName, new_colName){
   await pool.query(sql);
 }
 
+// Renames the id column of a certain created relational table
 async function renameRelationalIdColumn(table_name, old_colName, new_colName){
   const sql = `
     ALTER TABLE games_${table_name}
@@ -129,6 +146,7 @@ async function renameRelationalIdColumn(table_name, old_colName, new_colName){
   await pool.query(sql);
 }
 
+// Updata the table name and column name of a category in the 'categories' table
 async function updateCategories(new_tableName, old_tableName, new_colName){
   const sql = `
     UPDATE categories
@@ -150,6 +168,7 @@ async function updateCategories(new_tableName, old_tableName, new_colName){
 //   return rows;
 // }
 
+// Gets all data, based on the table and id 
 async function getItemDataByTableAndId(table_name, col_name, id){
   const sql = `
     SELECT *
@@ -161,6 +180,7 @@ async function getItemDataByTableAndId(table_name, col_name, id){
   return rows[0];
 }
 
+// Update the name data of a specific row based on its ID and table
 async function updateItemDataByTableAndId(table_name, col_name, id, data){
   const sql = `
     UPDATE ${table_name}
@@ -170,7 +190,7 @@ async function updateItemDataByTableAndId(table_name, col_name, id, data){
 
   await pool.query(sql, [id, data]);
 }
-
+// Gets all related data of a game based on category and game id
 async function getRelationalDataByTableAndId(table_name, col_name, game_id){
   const sql = `
     SELECT at.*
@@ -189,6 +209,7 @@ async function getRelationalDataByTableAndId(table_name, col_name, game_id){
   }
 }
 
+// Gets all data on a certain table
 async function getAllDataByTable(table){
   const sql = `
     SELECT * 
