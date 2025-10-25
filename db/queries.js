@@ -189,6 +189,14 @@ async function getRelationalDataByTableAndId(table_name, col_name, game_id){
   }
 }
 
+async function getAllDataByTable(table){
+  const sql = `
+    SELECT * 
+    FROM ` + table + `;`;
+
+  const { rows } = await pool.query(sql);
+  return rows;
+}
 
 // Older Queries
 
@@ -255,14 +263,6 @@ async function categoryExists(table_name){
 
 // SELECT general
 
-async function getAllDataByTable(table){
-  const sql = `
-    SELECT * 
-    FROM ` + table + `;`;
-
-  const { rows } = await pool.query(sql);
-  return rows;
-}
 
 async function getGames(){
   const sql = `
