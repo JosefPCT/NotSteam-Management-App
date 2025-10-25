@@ -11,6 +11,8 @@ const sameCategoryErr = `You didn't change anything`;
 const notEmptyErr = "must not be empty";
 
 // Custom validators
+
+// Custom validator to check if a category already exists in the 'categories' table
 const isUniqueCategory = async (value) => {
   const gameExists = await db.categoryExists(value);
   if(gameExists){
@@ -19,7 +21,7 @@ const isUniqueCategory = async (value) => {
   return true;
 }
 
-
+// Custom validator, checks that when editing a category, the value is not the same as the previous one then checks if the category already exists in the 'categories' table
 const isNotSameAndUniqueCategory = async(value, { req }) => {
   console.log("Custom validator for checking when editing a category, must not be the same category and new category must not exists in the 'categories' table ");
   
@@ -37,6 +39,7 @@ const isNotSameAndUniqueCategory = async(value, { req }) => {
   return true;
 }
 
+// Custom validator, checks if data already exists in a category
 const isUniqueDataInTable = async(value, { req }) => {
   console.log("Custom validator unique data in table");
   console.log("Check for req.params", req.params);
@@ -52,6 +55,7 @@ const isUniqueDataInTable = async(value, { req }) => {
   return true;
 }
 
+// Custom validator, checks that when editing an item in a category, that its not the same value as the previous one, then checks if the new value already exist in the category
 const isNotSameAndUniqueDataInTable = async(value, { req }) => {
   const { categoryName, itemId } = req.params;
 
@@ -68,7 +72,7 @@ const isNotSameAndUniqueDataInTable = async(value, { req }) => {
 }
 
 
-// Validate data
+// Validation Middlewares for adding
 const validateAddCategory = [
   body("table_name").trim()
     .notEmpty().withMessage(`Category Name(Plural) ${notEmptyErr}`)
@@ -83,8 +87,7 @@ const validateAddItem = [
     .custom(isUniqueDataInTable)
 ]
 
-// Validate editing
-
+// Validate middleware for editing
 const validateEditCategory = [
   body("table_name").trim()
     .notEmpty().withMessage(`Category Name(Plural) ${notEmptyErr}`)
@@ -100,6 +103,8 @@ const validateEditItem = [
 
 // Route handlers
 
+// GET handler for route '/categories'
+// Displays all available categories
 exports.indexGet = async(req, res) => {
   const categories = await db.getAllCategories();
 
@@ -109,6 +114,8 @@ exports.indexGet = async(req, res) => {
   })
 }
 
+// GET handler for route '/categories/add'
+// Renders a view that shows a form to add a category
 exports.addGet = async(req, res) => {
   res.render('pages/categories/add', {
     title: 'Add',
@@ -116,6 +123,8 @@ exports.addGet = async(req, res) => {
   });
 }
 
+// POST handler for route '/categories/add'
+// Uses a validation middleware, checks if there are errors in validation. If there is, re-render the form view. If not, proceeds on adding the new category in the db
 exports.addPost = [
   validateAddCategory,
   async(req, res) => {
@@ -139,6 +148,8 @@ exports.addPost = [
   }
 ];
 
+// GET route handler for 'categories/:categoryName'
+// Gets ands shows all data from the certain category
 exports.categoryNameGet = async(req, res) => {
   const { categoryName } = req.params
   const data = await db.getAllDataByTable(categoryName);
@@ -151,6 +162,9 @@ exports.categoryNameGet = async(req, res) => {
   })
 }
 
+// POST route handler for 'categories/:categoryName'
+// For deleting an item
+// MIGHT NEED TO REFACTOR to route into 'categories/:categoryName/delete' instead
 exports.categoryNamePost = async(req, res) => {
   const { _method } = req.body;
   const { categoryName } = req.params;
@@ -165,6 +179,8 @@ exports.categoryNamePost = async(req, res) => {
   res.redirect('/categories');
 };
 
+// GET route handler for '/categories/:categoryName/add
+// Renders a view to a form for adding an item to a category
 exports.categoryNameAddGet = async(req, res) => {
   const { categoryName } = req.params;
   res.render('pages/categories/categoryNameAdd', {
@@ -174,6 +190,9 @@ exports.categoryNameAddGet = async(req, res) => {
   })
 }
 
+// POST route handler for '/categories/:categoryName/add
+// Uses a validation middleware
+// Checks if there are errors in validation. If there is re-renders the form view for adding an item. If not, proceeds to inserting the item to the appropriate table
 exports.categoryNameAddPost = [
   validateAddItem,
   async(req, res) => {
@@ -195,6 +214,9 @@ exports.categoryNameAddPost = [
   }
 ]
 
+// GET route handler for '/categories/:categoryName/edit
+// Renders a view of a form to edit a category name
+// Already prepends the value to the form of the current name of the category by passing 'myCategory' object that has the current data
 exports.categoryNameEditGet = async(req, res) => {
   const { categoryName } = req.params;
 
@@ -208,6 +230,11 @@ exports.categoryNameEditGet = async(req, res) => {
   })
 }
 
+// POST route handler for '/categories/:categoryName/edit'
+// Uses a validation middleware
+// Checks if there are errors in validation. If there is, re-renders the view like its GET route handler, which means also getting the current data
+// If no errors, proceeds on renaming and updating the category name
+// Uses a lot of queries in altering and renaming db tables, and updating data on the 'categories' table
 exports.categoryNameEditPost = [
   validateEditCategory,
   async(req, res) => {
@@ -239,6 +266,9 @@ exports.categoryNameEditPost = [
   }
 ]
 
+// POST route handler for '/categories/:categoryName/:itemId'
+// Mostly for using the delete button in `/categories/:categoryName/' view/page
+// Deletes an item in the category/table
 exports.categNameItemIdPost = async(req, res) => {
   const { _method } = req.body;
   const { categoryName, itemId } = req.params;
@@ -252,6 +282,10 @@ exports.categNameItemIdPost = async(req, res) => {
   res.redirect(`/categories/${categoryName}`);
 }
 
+// GET route handler for '/categories/:categoryName/:itemId/edit'
+// Used for editing an item in the category/table
+// Gets and shows all current data for the specific item in the table
+// Renders a view that has a form for editing the item's data (name)
 exports.categNameItemIdEditGet = async(req, res) => {
   const { categoryName, itemId } = req.params;
 
@@ -269,6 +303,10 @@ exports.categNameItemIdEditGet = async(req, res) => {
   })
 }
 
+// POST route handler for '/categories/:categoryName/:itemId/edit'
+// Uses a validation middleware
+// Checks if there is errors in validation. If there is, re-renders the view with the form for editing, just like its GET handler, gets and shows all current data for the specifc item
+// If not, proceeds to updating the item's data (name), on the appropriate table/category
 exports.categNameItemIdEditPost = [
   validateEditItem,
   async(req, res) => {
