@@ -1,6 +1,9 @@
 <%- include('../../partials/header') %>
 <main>
     <h1>Showing All Categories</h1>
+    <a href="/categories/add">
+        <button>Add a category</button>
+    </a>
     <% if(locals.categories) { %>
       <div class="container">
       <% categories.forEach((category) => { %>
@@ -21,8 +24,6 @@
       <% }) %>
       </div>
     <% } %>
-    <a href="/categories/add">
-        <button>Add a category</button>
-    </a>
+    
 </main>
 <%- include('../../partials/footer') %>
