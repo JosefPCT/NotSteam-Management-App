@@ -10,6 +10,7 @@ const genresErr = "must have at least 1 genre";
 const existingGameErr = 'Game already exists, name must be a unique value'
 
 // Can disable code since game name doesn't have to be unique
+// A custom validator to check if a game already exists in the 'games' table
 const isUniqueGame = async (value) => {
   const gameExists = await db.checkGameExists(value);
   if(gameExists){
@@ -18,6 +19,7 @@ const isUniqueGame = async (value) => {
   return true;
 }
 
+// Custom validator used in editing a game, checks if the previous value is not the same as the new one when submitting the edit, and if not, checks if the game already exists in the 'games' table
 const isNotSameNameAndUniqueName = (async(value, { req }) => {
   // console.log("inside validator custom");
   // console.log("reqbody", req.body);
@@ -36,12 +38,15 @@ const isNotSameNameAndUniqueName = (async(value, { req }) => {
   return true;
 })
 
+// Validator Middlewares
+// Pass on to a route middleware as the first argument
+
 const validateAddGame = [
   body("game_name").trim()
     .custom(isUniqueGame),
   body("genres").trim()
-    .notEmpty().withMessage(genresErr)
-    
+    .notEmpty().withMessage(genresErr),
+
 ];
 
 const validateEditGame = [
@@ -54,6 +59,10 @@ const validateEditGame = [
 
 
 // Route handlers
+
+// Handler for the route '/games'
+// Checks if a query string is present. If present, will show games based on the value of the query string. If not, will show all games
+// Mutates an object to get all available data for each game, to pass on to the view
 exports.gamesIndexGet = async(req, res) => {
   // refactor later to search for games differently if there are query parameters on the url using req.query.queryName
   const categories = await db.getAllCategories();
@@ -136,6 +145,10 @@ exports.gamesIndexGet = async(req, res) => {
   });
 }
 
+
+// GET Handler for route '/games/add'
+// Search and get all available categories and their data
+// Creates a dynamic form based on available categories and data
 exports.gamesAddGet = async(req, res) => {
   const allCategories = await db.getAllCategories();
 
@@ -152,6 +165,11 @@ exports.gamesAddGet = async(req, res) => {
   });
 }
 
+// POST handler route for '/games/add'
+// Uses a validation middleware by making the handler an array, and passing the validation middleware as the first item
+// Checks if theres an error in the validation. 
+// If there is, re-render the page and pass on an errors object to the view
+// If not, proceed with the logic and database queries to insert the new game and its data to their respective tables
 exports.gamesAddPost = [ 
   validateAddGame,
   async(req, res) => {
@@ -194,6 +212,9 @@ exports.gamesAddPost = [
   }
 ];
 
+// GET route handler for 'games/:id'
+// Creates a page based on ':id' from req.params
+// Show data relevant to the specific game
 exports.gamesIdGet = async(req, res) => {
   const { id } = req.params;
 
@@ -211,6 +232,8 @@ exports.gamesIdGet = async(req, res) => {
   });
 }
 
+// POST route handler for 'games/:id'
+// Checks if the method from the hidden input is _DELETE, and proceeds on deleting the specific game if it is
 exports.gamesIdPost = async(req, res) => {
   console.log("Post Route");
   const { _method } = req.body;
@@ -223,6 +246,12 @@ exports.gamesIdPost = async(req, res) => {
   }
   res.redirect('/games');
 }
+
+// GET route handler for '/games/:id/edit
+// To Refactor:
+
+// Gets all available data from categories/tables,  similar to gamesAddGet and gamesAddPost, to create a dynamic form
+// Gets data from the specific game (/:id), to prepend values for user if there is data
 
 exports.gamesIdEditGet = async(req, res) => {
   const { id } = req.params;
@@ -258,6 +287,13 @@ exports.gamesIdEditGet = async(req, res) => {
   });
 }
 
+// POST route handler for '/games/:id/edit
+// To Refactor:
+
+// Goes through a validation middleware first
+// Checks if there is an error in validation
+// If there is, Same as its GET handler, gets all available data on each categories, and data specific to the game, and re-renders the view
+// If not, proceeds on editing data with database queries, then redirects 
 exports.gamesIdEditPost = [
   validateEditGame,
   async(req, res) => {
