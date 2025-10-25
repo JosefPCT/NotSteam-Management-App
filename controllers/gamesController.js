@@ -1,6 +1,7 @@
 const { body, validationResult, matchedData } = require("express-validator");
 
 const db = require('../db/queries');
+const helpers = require('./helpers.js');
 
 // Validation
 
@@ -136,14 +137,18 @@ exports.gamesIndexGet = async(req, res) => {
 }
 
 exports.gamesAddGet = async(req, res) => {
-  const allGenres = await db.getAllDataByTable('genres');
-  const allDevelopers = await db.getAllDataByTable('developers');
+  const allCategories = await db.getAllCategories();
+
+  for(const [ind, category] of allCategories.entries()){
+    let data = await db.getAllDataByTable(category.table_name);
+    category.data = data;
+  }
 
   res.render('pages/gamesAdd', {
     title: 'Add a game',
-    allGenres,
-    allDevelopers,
-    action: '/games/add'
+    allCategories,
+    action: '/games/add',
+    capitalize: helpers.capitalizeFirstLetter
   });
 }
 

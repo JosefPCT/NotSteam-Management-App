@@ -139,6 +139,16 @@ async function updateCategories(new_tableName, old_tableName, new_colName){
   await pool.query(sql, [old_tableName]);
 }
 
+// Same function as getAllDataByTable
+// async function getAllItemDataByTable(table_name){
+//   const SQL = `
+//     SELECT *
+//     FROM ${table_name}
+//   `;
+
+//   const { rows } = await pool.query(SQL);
+//   return rows;
+// }
 
 async function getItemDataByTableAndId(table_name, col_name, id){
   const sql = `

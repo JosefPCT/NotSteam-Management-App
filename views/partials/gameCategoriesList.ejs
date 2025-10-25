@@ -1,0 +1,51 @@
+<% if(locals.allCategories) { %>
+  <% allCategories.forEach((category) => { %>
+    <div>
+        <!-- Check if current category can have multiple or one selection -->
+        <!-- Code base for just one selection: Using '<select>' and <option> -->
+        
+        <% if(category.table_name === 'developers') { %>
+
+          <fieldset>
+              <legend>Choose a <%= capitalize(category.col_name) %>:</legend>
+              <label for="<%= category.table_name %> ">
+                    <%= capitalize(category.col_name) %>
+              </label>
+              <select name="<%= category.table_name %>" id="<%=category.table_name %>">
+                <% category.data.forEach(data => { %>
+                    <option
+                    value="<%= data[`${category.col_name}_id`]%>"
+                    <% if( (locals.myData) && (locals.myData[category.table_name]) && (myData[`${category.col_name}_id`] == data[`${category.col_name}_id`]) ) { %>
+                      selected
+                    <% } %>
+                      >
+                    <%= data[`${category.col_name}_name`] %>
+                    </option>
+                <% }) %>
+              </select>
+          </fieldset>
+        
+        <!-- Codebase for multiple selection, using checkboxes -->
+        <% } else { %>
+            
+            <fieldset>
+                <legend>Choose <%= capitalize(category.table_name) %></legend>
+                <% category.data.forEach((data) => { %>
+                  <label for="<%= data[`${category.col_name}_name`] %>">
+                    <%= data[`${category.col_name}_name`] %>
+                  </label>
+                  <input type="checkbox"
+                  name="<%= category.table_name %>[]"
+                  id="<%= data[`${category.col_name}_name`]%>"
+                  value="<%= data[`${category.col_name}_id`]%>"
+                  <% if( (locals.myData) && (locals.myData[category.table_name]) && (myData[category.table_name][myGenresId].includes(data[`${category.col_name}_id`]))) { %>
+                    checked
+                  <% } %>
+                  >
+                <% }) %>
+            </fieldset>
+
+        <% } %>
+    </div>
+  <% }) %>
+<% } %>
