@@ -131,7 +131,7 @@ exports.gamesIndexGet = async(req, res) => {
     title: 'Games',
     categories,
     games: games,
-    query: query[0]
+    query
   });
 }
 

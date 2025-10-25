@@ -1,7 +1,7 @@
 <%- include('../partials/header') %>
   <h1>
     <% if(query.length !== 0) { %>
-      Showing games that has <%= query.searchString %> in <%= query.category %>
+      Showing games that has <%= query[0].searchString %> in <%= query[0].category %>
     <% } else { %>
       Showing all games
     <% } %>
