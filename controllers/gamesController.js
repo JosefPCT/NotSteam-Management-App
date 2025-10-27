@@ -261,9 +261,6 @@ exports.gamesIdPost = async(req, res) => {
 exports.gamesIdEditGet = async(req, res) => {
   const { id } = req.params;
 
-  // const allGenres = await db.getAllDataByTable('genres');
-  // const allDevelopers = await db.getAllDataByTable('developers');
-
   let myData = {};
   const game = await db.getGameById(id);
   myData.game = game;
@@ -282,33 +279,13 @@ exports.gamesIdEditGet = async(req, res) => {
     });
   }
 
-  console.log('my data', myData);
-  console.log(myData.categories.genres.ids);
-  // const myGenresRows = await db.getGameGenresById(id);
-  // let myGenresId = [];
-  // myGenresRows.forEach((row) => {
-  //   myGenresId.push(row.genre_id);
-  // })
-  // const myDeveloper = await db.getGameDeveloperById(id);
-
-  // console.log(game[0]);
-  // console.log(genresId.includes(2));
-  // console.log(Object.values(genres));
-  // console.log(myDeveloper[0]);
-
-  // console.log(allGenres);
-  // console.log(allDevelopers);
-
+  // console.log('my data', myData);
+  // console.log(myData.categories.genres.ids);
 
   res.render('pages/gamesIdEdit', {
     title: 'Edit Game',
     allCategories,
     myData,
-    // myGame: game[0],
-    // allGenres: allGenres,
-    // myGenresId: myGenresId,
-    // allDevelopers: allDevelopers,
-    // myDeveloper: myDeveloper[0],
     action: '/games/' + myData.game.game_id + '/edit',
     capitalize: helpers.capitalizeFirstLetter
   });
