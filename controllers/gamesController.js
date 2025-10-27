@@ -175,16 +175,21 @@ exports.gamesAddPost = [
   async(req, res) => {
     console.log("Checking req body", req.body);
     const errors = validationResult(req);
-    const allGenres = await db.getAllDataByTable('genres');
-    const allDevelopers = await db.getAllDataByTable('developers');
+
+    const allCategories = await db.getAllCategories();
+
+    for(const category of allCategories){
+      let data = await db.getAllDataByTable(category.table_name);
+      category.data = data;
+    }
 
     if(!errors.isEmpty()){
       return res.status(400).render('pages/gamesAdd', {
         title: 'Add a game',
-        allGenres,
-        allDevelopers,
+        allCategories,
         action: '/games/add',
         errors: errors.array(),
+        capitalize: helpers.capitalizeFirstLetter
       })
     }
     const { game_name } = req.body;
@@ -192,21 +197,20 @@ exports.gamesAddPost = [
     let game_id = await db.insertGame(game_name);
     game_id = game_id[0].game_id;
 
-    Object.keys(req.body).forEach(async (key) => {
+    for(const key in req.body){
+      console.log("Iterating through req.body with for...in");
+      console.log(`Key: ${key}, Value: ${req.body[key]}`);
       if(key !== 'game_name'){
         if(Array.isArray(req.body[key])){
-          console.log('an array');
-          req.body[key].forEach(async (item_id) => {
-            console.log('item', item_id);
-            await db.insertRelationByTable(game_id, item_id, key);
-          });
+          for(const itemId of req.body[key]){
+            console.log("Item id", itemId);
+            await db.insertRelationByTable(game_id, itemId, key);
+          }
         } else {
-          console.log("not an array", req.body[key]);
-          console.log(key);
           await db.insertRelationByTable(game_id, req.body[key], key);
         }
       }
-    });
+    }
 
     res.redirect('/games');
   }
