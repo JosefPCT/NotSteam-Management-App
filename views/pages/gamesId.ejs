@@ -3,22 +3,22 @@
     <h1><%= myGame.game_name %></h1>
     <p>Game ID: <%= myGame.game_id %></p>
 
-    <% if(locals.myGenres) { %>
-    <div class="list-genres">
-      
-        <p>Genres:</p>
-        <% myGenres.forEach(genre => { %>
-          <div>
-            <a href="/games?genres=<%=genre.genre_name.toLowerCase() %>"><%= genre.genre_name %></a>
+    <% if(locals.myGame.categories) { %>
+      <% for(const category of myGame.categories) { %>
+        <h3><%= capitalize(category.table_name) %></h3>
+        <a href="/categories/<%= category.table_name %>/add">Add <%= category.col_name %></a>
+        <% if(category.data.length !== 0) { %> 
+          <% for(const data of category.data) { %> 
+            <div class="card">
+              <p><%= data[`${category.col_name}_name`] %></p>
+            </div>
+          <% } %>
+        <% } else { %>
+          <div class="card">
+            <p>None</p>
           </div>
-        <% }); %>
-    </div>
-    <% } %>
-
-    <% if(locals.myDeveloper) { %>
-    <div class="container-developer">
-      <p>Developer: <a href="/games?developers=<%= myDeveloper.developer_name %>"><%= myDeveloper.developer_name%></a></p>
-    </div>
+        <% } %>
+      <% } %>
     <% } %>
 
     <a href="/games/<%= myGame.game_id %>/edit">

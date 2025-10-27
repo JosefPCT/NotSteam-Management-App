@@ -101,17 +101,10 @@ exports.gamesIndexGet = async(req, res) => {
       // console.log('Showing game', game);
 
       let data = await db.getRelationalDataByTableAndId(category.table_name, category.col_name, game.game_id);
-      // console.log("Showing data...");
-      // console.log(data);
-      // let table = category.table_name;
-      // console.log(table);
       let catName = 'categories';
-      // games[ind][catName][category.table_name] = data;
-      // games[ind][catName].push({ name: category.table_name, [category.table_name] : data });
       games[ind][catName].push({ table_name: category.table_name, col_name: category.col_name, data });
-      // console.log("Showing games object");
-      // console.log(games);
     }
+
     // Test code to get structure of object
     // console.log("Showing game object")
     // console.log(game);
@@ -194,7 +187,7 @@ exports.gamesAddPost = [
         capitalize: helpers.capitalizeFirstLetter
       })
     }
-    
+
     const { game_name } = req.body;
 
     let game_id = await db.insertGame(game_name);
@@ -226,16 +219,29 @@ exports.gamesIdGet = async(req, res) => {
   const { id } = req.params;
 
   const myGame = await db.getGameById(id);
-  const myGenres = await db.getGameGenresById(id);
-  const myDeveloper = await db.getGameDeveloperById(id);
+  // const myGenres = await db.getGameGenresById(id);
+  // const myDeveloper = await db.getGameDeveloperById(id);
+  const categories = await db.getAllCategories();
 
-  console.log('My genres', myGenres);
+  myGame.categories = [];
+  console.log("game object", myGame);
+  
+  // console.log("categories object", categories);
+  for(const category of categories){
+    console.log(category);
+    let data = await db.getRelationalDataByTableAndId(category.table_name, category.col_name, myGame.game_id);
+    console.log(data);
+    myGame.categories.push( {table_name: category.table_name, col_name: category.col_name, data} );
+  }
+  console.log(myGame);
+
 
   res.render('pages/gamesId', {
     title: 'Game',
-    myGame: myGame[0],
-    myGenres,
-    myDeveloper: myDeveloper[0]
+    myGame,
+    capitalize: helpers.capitalizeFirstLetter
+    // myGenres,
+    // myDeveloper: myDeveloper[0]
   });
 }
 

@@ -303,7 +303,7 @@ async function getGameById(id){
  `;
 
  const { rows } = await pool.query(sql, [id]);
- return rows;
+ return rows[0];
 }
 
 async function searchGameByName(name){
