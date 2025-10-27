@@ -5,8 +5,9 @@ const helpers = require('./helpers.js');
 
 // Validation
 
-const testErr = "test error";
+const gameNameEmptyErr = "must have a game name";
 const genresErr = "must have at least 1 genre";
+const genresLengthErr = 'must have at least 1 genre and no more than 3 genres';
 const existingGameErr = 'Game already exists, name must be a unique value'
 
 // Can disable code since game name doesn't have to be unique
@@ -43,9 +44,11 @@ const isNotSameNameAndUniqueName = (async(value, { req }) => {
 
 const validateAddGame = [
   body("game_name").trim()
+    .notEmpty().withMessage(gameNameEmptyErr)
     .custom(isUniqueGame),
   body("genres").trim()
-    .notEmpty().withMessage(genresErr),
+    .notEmpty().withMessage(genresErr)
+    .isArray( {min: 1, max: 3}).withMessage(genresLengthErr)
 
 ];
 
@@ -175,7 +178,6 @@ exports.gamesAddPost = [
   async(req, res) => {
     console.log("Checking req body", req.body);
     const errors = validationResult(req);
-
     const allCategories = await db.getAllCategories();
 
     for(const category of allCategories){
@@ -192,6 +194,7 @@ exports.gamesAddPost = [
         capitalize: helpers.capitalizeFirstLetter
       })
     }
+    
     const { game_name } = req.body;
 
     let game_id = await db.insertGame(game_name);
