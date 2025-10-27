@@ -219,29 +219,21 @@ exports.gamesIdGet = async(req, res) => {
   const { id } = req.params;
 
   const myGame = await db.getGameById(id);
-  // const myGenres = await db.getGameGenresById(id);
-  // const myDeveloper = await db.getGameDeveloperById(id);
   const categories = await db.getAllCategories();
 
   myGame.categories = [];
-  console.log("game object", myGame);
   
-  // console.log("categories object", categories);
   for(const category of categories){
     console.log(category);
     let data = await db.getRelationalDataByTableAndId(category.table_name, category.col_name, myGame.game_id);
     console.log(data);
     myGame.categories.push( {table_name: category.table_name, col_name: category.col_name, data} );
   }
-  console.log(myGame);
-
 
   res.render('pages/gamesId', {
     title: 'Game',
     myGame,
     capitalize: helpers.capitalizeFirstLetter
-    // myGenres,
-    // myDeveloper: myDeveloper[0]
   });
 }
 
