@@ -219,9 +219,9 @@ exports.gamesIdGet = async(req, res) => {
   const { id } = req.params;
 
   const myGame = await db.getGameById(id);
-  const categories = await db.getAllCategories();
-
   myGame.categories = [];
+
+  const categories = await db.getAllCategories();
   
   for(const category of categories){
     console.log(category);
@@ -261,34 +261,56 @@ exports.gamesIdPost = async(req, res) => {
 exports.gamesIdEditGet = async(req, res) => {
   const { id } = req.params;
 
-  const allGenres = await db.getAllDataByTable('genres');
-  const allDevelopers = await db.getAllDataByTable('developers');
+  // const allGenres = await db.getAllDataByTable('genres');
+  // const allDevelopers = await db.getAllDataByTable('developers');
 
+  let myData = {};
   const game = await db.getGameById(id);
-  const myGenresRows = await db.getGameGenresById(id);
-  let myGenresId = [];
-  myGenresRows.forEach((row) => {
-    myGenresId.push(row.genre_id);
-  })
-  const myDeveloper = await db.getGameDeveloperById(id);
+  myData.game = game;
+  myData.categories = {};
+  const allCategories = await db.getAllCategories();
+
+  for(const [ind, category] of allCategories.entries()){
+    let data = await db.getAllDataByTable(category.table_name);
+    category.data = data;
+
+    relatedData = await db.getRelationalDataByTableAndId(category.table_name, category.col_name, myData.game.game_id);
+    myData.categories[category.table_name] = {}
+    myData.categories[category.table_name]['ids'] = [];
+    relatedData.forEach((data) => {
+      myData.categories[category.table_name].ids.push(data[`${category.col_name}_id`]);
+    });
+  }
+
+  console.log('my data', myData);
+  console.log(myData.categories.genres.ids);
+  // const myGenresRows = await db.getGameGenresById(id);
+  // let myGenresId = [];
+  // myGenresRows.forEach((row) => {
+  //   myGenresId.push(row.genre_id);
+  // })
+  // const myDeveloper = await db.getGameDeveloperById(id);
 
   // console.log(game[0]);
   // console.log(genresId.includes(2));
   // console.log(Object.values(genres));
-  console.log(myDeveloper[0]);
+  // console.log(myDeveloper[0]);
 
-  console.log(allGenres);
+  // console.log(allGenres);
   // console.log(allDevelopers);
 
 
   res.render('pages/gamesIdEdit', {
     title: 'Edit Game',
-    myGame: game[0],
-    allGenres: allGenres,
-    myGenresId: myGenresId,
-    allDevelopers: allDevelopers,
-    myDeveloper: myDeveloper[0],
-    action: '/games/' + game[0].game_id + '/edit'
+    allCategories,
+    myData,
+    // myGame: game[0],
+    // allGenres: allGenres,
+    // myGenresId: myGenresId,
+    // allDevelopers: allDevelopers,
+    // myDeveloper: myDeveloper[0],
+    action: '/games/' + myData.game.game_id + '/edit',
+    capitalize: helpers.capitalizeFirstLetter
   });
 }
 
@@ -323,12 +345,12 @@ exports.gamesIdEditPost = [
     if(!errors.isEmpty()){
       return res.status(400).render('pages/gamesIdEdit', {
         title: 'Edit Game',
-        myGame: game[0],
+        myGame: game,
         allGenres,
         myGenresId,
         allDevelopers,
         myDeveloper: myDeveloper[0],
-        action: '/games/' + game[0].game_id + '/edit',
+        action: '/games/' + game.game_id + '/edit',
         errors: errors.array(),
       })
     }

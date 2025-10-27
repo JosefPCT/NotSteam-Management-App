@@ -4,8 +4,8 @@
       type="text" 
       name="game_name" 
       id="game_name" 
-      <% if(locals.myGame) { %>
-        value="<%= myGame.game_name %>"
+      <% if(locals.myData && locals.myData.game ) { %>
+        value="<%= myData.game.game_name %>"
       <% } %>
     >
   </div>

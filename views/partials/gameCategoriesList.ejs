@@ -15,7 +15,7 @@
                 <% category.data.forEach(data => { %>
                     <option
                     value="<%= data[`${category.col_name}_id`]%>"
-                    <% if( (locals.myData) && (locals.myData[category.table_name]) && (myData[`${category.col_name}_id`] == data[`${category.col_name}_id`]) ) { %>
+                    <% if( (locals.myData) && (locals.myData.categories[category.table_name].ids) && (myData.categories[category.table_name].ids.includes(data[`${category.col_name}_id`])) ) { %>
                       selected
                     <% } %>
                       >
@@ -38,7 +38,7 @@
                   name="<%= category.table_name %>[]"
                   id="<%= data[`${category.col_name}_name`]%>"
                   value="<%= data[`${category.col_name}_id`]%>"
-                  <% if( (locals.myData) && (locals.myData[category.table_name]) && (myData[category.table_name][myGenresId].includes(data[`${category.col_name}_id`]))) { %>
+                  <% if( (locals.myData) && (locals.myData.categories[category.table_name].ids) && (myData.categories[category.table_name].ids.includes(data[`${category.col_name}_id`]))) { %>
                     checked
                   <% } %>
                   >
