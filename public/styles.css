@@ -1,3 +1,7 @@
+body{
+  background-color: #eee;
+}
+
 .row{
     display: flex;
 }
@@ -20,11 +24,11 @@ main{
 }
 
 .card {
-  background-color: #eee; /* White background for the card */
+  background-color: #fff; /* White background for the card */
   border-radius: 8px; /* Slightly rounded corners */
   padding: 20px; /* Internal spacing */
   margin: 20px; /* Space around the card */
-  width: 100%; /* Fixed width for demonstration */
+  width: 90%; /* Fixed width for demonstration */
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Simple box shadow */
   transition: box-shadow 0.3s ease; /* Smooth transition for hover effect */
 }

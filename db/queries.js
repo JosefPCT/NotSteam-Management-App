@@ -1,6 +1,6 @@
 const pool = require('./pool');
 
-// Table Creation
+// QUERIES: CREATE
 
 // Create a dynamic table based on passed parameters
 // Used in creating a table for a new category
@@ -28,16 +28,9 @@ async function createRelationalTable(table_name, col_name){
   await pool.query(sql);
 }
 
-// Inserts data based on table name and column name of a category
-async function insertDataToTable(table_name, col_name, data){
-  const sql = `
-    INSERT INTO ${table_name}(${col_name}_name) VALUES
-    ($1)
-  `;
-  console.log(sql);
+// ----------------------------------------------------------------------------------------
 
-  await pool.query(sql, [data]);
-}
+// QUERIES: DELETE
 
 // Deletes data, based on the table name and the id of the row
 // data should be the id of the column
@@ -69,22 +62,89 @@ async function dropRelationalTable(table_name){
   await pool.query(sql);
 }
 
-// Query to check if data already exists on a specific table, returns true or false
-async function dataExistsInTable(table_name, col_name, data){
+// Deletes relational data based on table and id
+async function deleteAllRelationalDataOfGameById(table_name, id){
   const sql = `
-    SELECT 1
-    FROM ${table_name}
-    WHERE ${col_name}_name = $1
+    DELETE FROM games_${table_name}
+    WHERE game_id = $1
+  `;
+
+  await pool.query(sql, [id]);
+}
+
+// DELETE from categories table
+async function deleteFromCategoriesByTableName(table_name){
+  const sql = `
+    DELETE FROM categories
+    WHERE LOWER(table_name) = LOWER($1)
+  `;
+  await pool.query(sql, [table_name]);
+}
+
+async function deleteGameById(id){
+  const sql = `
+    DELETE FROM games
+    WHERE game_id=$1;
+  `;
+  await pool.query(sql, [id]);
+}
+
+// ----------------------------------------------------------------------------------------
+
+// QUERIES: INSERT
+
+// Inserts data based on table name and column name of a category
+async function insertDataToTable(table_name, col_name, data){
+  const sql = `
+    INSERT INTO ${table_name}(${col_name}_name) VALUES
+    ($1)
+  `;
+  console.log(sql);
+
+  await pool.query(sql, [data]);
+}
+
+// INSERT to categories table
+async function insertToCategories(table_name, col_name){
+  const sql = `
+    INSERT INTO categories(table_name, col_name) VALUES
+    ($1, $2);
+  `;
+
+  await pool.query(sql, [table_name, col_name]);
+}
+
+async function insertGame(data){
+  const sql = `
+  INSERT INTO games(game_name) VALUES
+  ($1)
+  RETURNING game_id;
   `;
 
   const { rows } = await pool.query(sql, [data]);
-  console.log(rows);
-  if(rows.length ===  0 ){
-    return false;
-  } else {
-    return true;
-  }
+  // console.log('Inserted row:', rows);
+  return rows;
 }
+
+async function insertRelationByTable(game_id, data_id, table){
+  // Alternative: Query to categories table to get column name of the table, might need to create a category table
+
+  let col_name = await getColNameOfTable(table);
+  // let col_name = table.slice(0, -1);
+
+  const sql = `
+  INSERT INTO games_` + table + `(game_id,` + col_name + `_id) 
+    SELECT $1, $2
+  WHERE NOT EXISTS (
+    SELECT 1 FROM games_` + table + ` WHERE game_id = $1 AND ` + col_name +`_id = $2
+  );
+  `;
+  await pool.query(sql, [game_id,data_id]);
+}
+
+// ----------------------------------------------------------------------------------------
+
+// QUERIES: UPDATE
 
 // Rename a table
 async function renameTable(old_tableName, new_tableName){
@@ -157,16 +217,29 @@ async function updateCategories(new_tableName, old_tableName, new_colName){
   await pool.query(sql, [old_tableName]);
 }
 
-// Same function as getAllDataByTable
-// async function getAllItemDataByTable(table_name){
-//   const SQL = `
-//     SELECT *
-//     FROM ${table_name}
-//   `;
+// Update the name data of a specific row based on its ID and table
+async function updateItemDataByTableAndId(table_name, col_name, id, data){
+  const sql = `
+    UPDATE ${table_name}
+    SET ${col_name}_name = $2
+    WHERE ${col_name}_id = $1;
+  `;
 
-//   const { rows } = await pool.query(SQL);
-//   return rows;
-// }
+  await pool.query(sql, [id, data]);
+}
+
+async function updateGame(newData,game_id){
+  const sql = `
+  UPDATE games
+  SET game_name = $1
+  WHERE game_id = $2;
+  `;
+  await pool.query(sql, [newData,game_id]);
+}
+
+// ----------------------------------------------------------------------------------------
+
+// QUERIES: SELECT
 
 // Gets all data, based on the table and id 
 async function getItemDataByTableAndId(table_name, col_name, id){
@@ -180,16 +253,6 @@ async function getItemDataByTableAndId(table_name, col_name, id){
   return rows[0];
 }
 
-// Update the name data of a specific row based on its ID and table
-async function updateItemDataByTableAndId(table_name, col_name, id, data){
-  const sql = `
-    UPDATE ${table_name}
-    SET ${col_name}_name = $2
-    WHERE ${col_name}_id = $1;
-  `;
-
-  await pool.query(sql, [id, data]);
-}
 // Gets all related data of a game based on category and game id
 async function getRelationalDataByTableAndId(table_name, col_name, game_id){
   const sql = `
@@ -209,51 +272,6 @@ async function getRelationalDataByTableAndId(table_name, col_name, game_id){
   }
 }
 
-// Gets all data on a certain table
-async function getAllDataByTable(table){
-  const sql = `
-    SELECT * 
-    FROM ` + table + `;`;
-
-  const { rows } = await pool.query(sql);
-  return rows;
-}
-
-// Deletes relational data based on table and id
-async function deleteAllRelationalDataOfGameById(table_name, id){
-  const sql = `
-    DELETE FROM games_${table_name}
-    WHERE game_id = $1
-  `;
-
-  await pool.query(sql, [id]);
-}
-
-
-// Older Queries
-
-// Categories
-
-// INSERT to categories table
-async function insertToCategories(table_name, col_name){
-  const sql = `
-    INSERT INTO categories(table_name, col_name) VALUES
-    ($1, $2);
-  `;
-
-  await pool.query(sql, [table_name, col_name]);
-}
-
-// DELETE from categories table
-
-async function deleteFromCategoriesByTableName(table_name){
-  const sql = `
-    DELETE FROM categories
-    WHERE LOWER(table_name) = LOWER($1)
-  `;
-  await pool.query(sql, [table_name]);
-}
-
 // SELECT categories
 async function getAllCategories(){
   const sql = `
@@ -265,7 +283,17 @@ async function getAllCategories(){
   return rows;
 }
 
+// Gets all data on a certain table
+async function getAllDataByTable(table){
+  const sql = `
+    SELECT * 
+    FROM ` + table + `;`;
 
+  const { rows } = await pool.query(sql);
+  return rows;
+}
+
+// Get a specific category in categories table
 async function getCategoryByTableName(table){
   const sql = `
     SELECT *
@@ -276,25 +304,6 @@ async function getCategoryByTableName(table){
   const { rows } = await pool.query(sql, [table]);
   return rows[0];
 }
-
-async function categoryExists(table_name){
-  const sql = `
-    SELECT 1
-    FROM categories
-    WHERE table_name = $1
-  `;
-
-  const { rows } = await pool.query(sql, [table_name]);
-
-  if(rows.length === 0){
-    return false;
-  } else {
-    return true;
-  }
-}
-
-// SELECT general
-
 
 async function getGames(){
   const sql = `
@@ -345,100 +354,43 @@ async function getGamesByTable(table, toSearchData){
   return rows;
 }
 
-async function getGameGenresById(id){
- 
- const sql = `
-   SELECT ge.*
-   FROM games ga
-   JOIN games_genres gg ON ga.game_id = gg.game_id
-   JOIN genres ge ON ge.genre_id = gg.genre_id
-   WHERE ga.game_id=$1;
- `;
-  const { rows } = await pool.query(sql,[id]);
-  return rows;
-}
+// ----------------------------------------------------------------------------------------
 
-async function getGameDeveloperById(id){
- const sql = `
-   SELECT d.*
-   FROM games ga
-   JOIN games_developers gd ON ga.game_id = gd.game_id
-   JOIN developers d ON d.developer_id = gd.developer_id
-   WHERE ga.game_id=$1;
- `;
-  const { rows } = await pool.query(sql,[id]);
-  return rows;
-}
+// QUERIES: OTHERS
 
-// Inserting
-
-async function insertGame(data){
+// Query to check if data already exists on a specific table, returns true or false
+async function dataExistsInTable(table_name, col_name, data){
   const sql = `
-  INSERT INTO games(game_name) VALUES
-  ($1)
-  RETURNING game_id;
+    SELECT 1
+    FROM ${table_name}
+    WHERE ${col_name}_name = $1
   `;
 
   const { rows } = await pool.query(sql, [data]);
-  // console.log('Inserted row:', rows);
-  return rows;
+  console.log(rows);
+  if(rows.length ===  0 ){
+    return false;
+  } else {
+    return true;
+  }
 }
 
-async function insertRelationByTable(game_id, data_id, table){
-  // Alternative: Query to categories table to get column name of the table, might need to create a category table
-
-  let col_name = await getColNameOfTable(table);
-  // let col_name = table.slice(0, -1);
-
+async function categoryExists(table_name){
   const sql = `
-  INSERT INTO games_` + table + `(game_id,` + col_name + `_id) 
-    SELECT $1, $2
-  WHERE NOT EXISTS (
-    SELECT 1 FROM games_` + table + ` WHERE game_id = $1 AND ` + col_name +`_id = $2
-  );
+    SELECT 1
+    FROM categories
+    WHERE table_name = $1
   `;
-  await pool.query(sql, [game_id,data_id]);
+
+  const { rows } = await pool.query(sql, [table_name]);
+
+  if(rows.length === 0){
+    return false;
+  } else {
+    return true;
+  }
 }
 
-// Updating
-
-async function updateGame(newData,game_id){
-  const sql = `
-  UPDATE games
-  SET game_name = $1
-  WHERE game_id = $2;
-  `;
-  await pool.query(sql, [newData,game_id]);
-}
-
-async function updateRelationByTable(game_id, data_id, table){
-  // Alternative: Query to categories table to get column name of the table, might need to create a category table
-  // let col_name = table.slice(0, -1);
-
-  let col_name = await getColNameOfTable(table);
-
-  console.log('table name', table)
-  console.log('col name', col_name);
-  const sql = `
-    UPDATE games_` + table +
-    ` SET game_id = $1, ` + col_name + `_id = $2
-    WHERE game_id = $1;
-  `;
-  console.log('sql', sql);
-  await pool.query(sql, [game_id,data_id]);
-}
-
-// Deleting
-async function deleteGameById(id){
-  const sql = `
-    DELETE FROM games
-    WHERE game_id=$1;
-  `;
-  await pool.query(sql, [id]);
-}
-
-
-// Helper Functions
 
 async function getColNameOfTable(table){
   const sql = `
@@ -478,50 +430,46 @@ async function getGameNameById(id){
   return rows[0].game_name;
 }
 
-async function testQuery(){
-
-}
+// ----------------------------------------------------------------------------------------
 
 module.exports = {
   createTable,
   createRelationalTable,
-  insertDataToTable,
-  deleteDataFromTableById,
   dropTable,
   dropRelationalTable,
-  dataExistsInTable,
+  deleteDataFromTableById,
+  deleteAllRelationalDataOfGameById,
+  deleteGameById,
+  deleteFromCategoriesByTableName,
+  insertDataToTable,
+  insertRelationByTable,
+  insertGame,
+  insertToCategories,
+  updateItemDataByTableAndId,
+  updateGame,
+  updateCategories,
   renameTable,
   renameRelationalTable,
   renameSequenceTable,
   renameIdColumn,
   renameNameColumn,
   renameRelationalIdColumn,
-  updateCategories,
-  getItemDataByTableAndId,
-  updateItemDataByTableAndId,
-  getRelationalDataByTableAndId,
-  insertToCategories,
-  deleteFromCategoriesByTableName,
-  categoryExists,
-  getCategoryByTableName,
   getAllDataByTable,
+  getItemDataByTableAndId,
+  getRelationalDataByTableAndId,
   getGames,
-  searchGameByName,
   getGamesByTable,
   getGameById,
-  getGameGenresById,
-  getGameDeveloperById,
-  getAllCategories,
-  insertGame,
-  insertRelationByTable,
-  updateRelationByTable,
-  updateGame,
-  deleteGameById,
-  deleteAllRelationalDataOfGameById,
-  checkGameExists,
   getGameNameById,
-  testQuery
+  getAllCategories,
+  getCategoryByTableName,
+  searchGameByName,
+  dataExistsInTable,
+  categoryExists,
+  checkGameExists,
 }
+
+
 
 // Unused
 
@@ -604,3 +552,61 @@ module.exports = {
 //   const { rows } = await pool.query(sql, [genre]);
 //   return rows;
 // }
+
+
+// Same function as getAllDataByTable
+// async function getAllItemDataByTable(table_name){
+//   const SQL = `
+//     SELECT *
+//     FROM ${table_name}
+//   `;
+
+//   const { rows } = await pool.query(SQL);
+//   return rows;
+// }
+
+
+// async function getGameGenresById(id){
+//  const sql = `
+//    SELECT ge.*
+//    FROM games ga
+//    JOIN games_genres gg ON ga.game_id = gg.game_id
+//    JOIN genres ge ON ge.genre_id = gg.genre_id
+//    WHERE ga.game_id=$1;
+//  `;
+//   const { rows } = await pool.query(sql,[id]);
+//   return rows;
+// }
+
+// async function getGameDeveloperById(id){
+//  const sql = `
+//    SELECT d.*
+//    FROM games ga
+//    JOIN games_developers gd ON ga.game_id = gd.game_id
+//    JOIN developers d ON d.developer_id = gd.developer_id
+//    WHERE ga.game_id=$1;
+//  `;
+//   const { rows } = await pool.query(sql,[id]);
+//   return rows;
+// }
+
+
+// async function updateRelationByTable(game_id, data_id, table){
+//   // Alternative: Query to categories table to get column name of the table, might need to create a category table
+//   // let col_name = table.slice(0, -1);
+
+//   let col_name = await getColNameOfTable(table);
+
+//   console.log('table name', table)
+//   console.log('col name', col_name);
+//   const sql = `
+//     UPDATE games_` + table +
+//     ` SET game_id = $1, ` + col_name + `_id = $2
+//     WHERE game_id = $1;
+//   `;
+//   console.log('sql', sql);
+//   await pool.query(sql, [game_id,data_id]);
+// }
+
+
+
