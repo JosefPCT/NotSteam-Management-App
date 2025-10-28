@@ -241,7 +241,10 @@ exports.gamesIdGet = async(req, res) => {
 }
 
 // POST route handler for 'games/:id'
-// Checks if the method from the hidden input is _DELETE, and proceeds on deleting the specific game if it is
+// Some basic authentication
+// Checks for POST requests in 'games/:id`
+// Needs express.json() to be declared
+// Checks if the user input is the correct SECRET, then checks the _method prop in the req.body if its for deletion or editing, do db queries appropriately
 exports.gamesIdPost = async(req, res) => {
   console.log("Post Route of games/:id ");
   
