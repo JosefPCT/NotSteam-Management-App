@@ -9,5 +9,19 @@
           Show Categories
         </a>
     </div>
+    <div>
+      <button onclick="handleClick()">Test</button>
+    </div>
   </main>
+  <script>
+    function handleClick(){
+      let data = prompt("Enter secret:");
+      console.log(data === "<%= SECRET %>");
+      console.log("<%= SECRET %>");
+      '<%= %>'
+        
+      console.log("<%= url %>");
+    }
+    
+  </script>
 <%- include('../partials/footer') %>

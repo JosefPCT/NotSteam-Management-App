@@ -3,6 +3,8 @@ const { body, validationResult, matchedData } = require("express-validator");
 const db = require('../db/queries');
 const helpers = require('./helpers.js');
 
+const SECRET = 'admin';
+
 // Validation
 
 const gameNameEmptyErr = "must have a game name";
@@ -137,7 +139,8 @@ exports.gamesIndexGet = async(req, res) => {
     title: 'Games',
     categories,
     games: games,
-    query
+    query,
+    checkUser: helpers.checkUser
   });
 }
 
@@ -240,15 +243,25 @@ exports.gamesIdGet = async(req, res) => {
 // POST route handler for 'games/:id'
 // Checks if the method from the hidden input is _DELETE, and proceeds on deleting the specific game if it is
 exports.gamesIdPost = async(req, res) => {
-  console.log("Post Route");
-  const { _method } = req.body;
-  const { id } = req.params;
-
-  if(_method === 'DELETE'){
-    console.log("Deleting...");
-    db.deleteGameById(id);
+  console.log("Post Route of games/:id ");
   
+  // const { _method } = req.body;
+  // const { id } = req.params;
+
+  // if(_method === 'DELETE'){
+  //   console.log("Deleting...");
+  //   db.deleteGameById(id);
+  
+  // }
+
+  const { userInput, game_id } = req.body;
+  console.log(userInput);
+
+  if(userInput === SECRET){
+    console.log("Authorized, deleting game...");
+    db.deleteGameById(game_id);
   }
+
   res.redirect('/games');
 }
 

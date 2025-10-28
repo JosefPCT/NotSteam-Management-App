@@ -15,6 +15,9 @@ app.set('view engine', 'ejs');
 // Allows serving of static files (i.e css)
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Allows parsing of JSON
+app.use(express.json());
+
 // Allows parsing of Form data in the request body
 app.use(express.urlencoded( {extended: true}));
 

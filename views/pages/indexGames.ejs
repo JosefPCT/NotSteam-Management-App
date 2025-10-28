@@ -52,10 +52,12 @@
                   <a href="/games/<%= game.game_id %>/edit">
                     <button>Edit</button>
                   </a>
-                  <form action="/games/<%= game.game_id %>" method="POST">
+                  <button onclick="clickDeleteHandler('<%= game.game_id %>')">Delete</button>
+
+                  <!-- <form action="/games/<%= game.game_id %>" method="POST">
                     <input type="hidden" name="_method" value="DELETE">
                     <button type="submit">Delete</button>
-                  </form>
+                  </form> -->
                 </div>
 
           </div>
@@ -63,4 +65,23 @@
       <% } %>
     </div>
   </main>
+  <script>
+   async function clickDeleteHandler(id){
+    console.log(id);
+    let input = prompt("Enter Secret:");
+    if(input){
+      try{
+        const response = await fetch(`/games/${id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ userInput: input, game_id: id})
+        })
+      } catch (error){
+        alert('Error sending data:', error);
+      }
+    }
+   }
+  </script>
 <%- include('../partials/footer') %>
