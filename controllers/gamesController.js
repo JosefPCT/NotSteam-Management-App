@@ -254,15 +254,23 @@ exports.gamesIdPost = async(req, res) => {
   
   // }
 
-  const { userInput, game_id } = req.body;
+  const { _method, userInput, game_id, redirectUrl } = req.body;
   console.log(userInput);
 
   if(userInput === SECRET){
-    console.log("Authorized, deleting game...");
-    db.deleteGameById(game_id);
+    if(_method === 'DELETE'){
+      console.log("Authorized, deleting game...");
+      await db.deleteGameById(game_id);
+      res.redirect('/games');
+    }
+
+    if(_method === 'EDIT'){
+      console.log("Authorized, redirecting to edit...");
+      // console.log(redirectUrl);
+      res.redirect(`${redirectUrl}`);
+    }
   }
 
-  res.redirect('/games');
 }
 
 // GET route handler for '/games/:id/edit

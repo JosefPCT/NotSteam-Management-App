@@ -49,9 +49,8 @@
                 </div>
 
                 <div class="row">
-                  <a href="/games/<%= game.game_id %>/edit">
-                    <button>Edit</button>
-                  </a>
+                  <button onclick="clickEditHandler('<%= game.game_id %>','/games/<%= game.game_id  %>/edit' )">Edit</button>
+                
                   <button onclick="clickDeleteHandler('<%= game.game_id %>')">Delete</button>
 
                   <!-- <form action="/games/<%= game.game_id %>" method="POST">
@@ -66,6 +65,27 @@
     </div>
   </main>
   <script>
+
+   async function clickEditHandler(id, redirectUrl){
+    let input = prompt("To edit the game enter the secret:");
+    if(input){
+      try{
+        const response = await fetch(`/games/${id}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ _method: 'EDIT', userInput: input, redirectUrl })
+        })
+        if(response.ok){
+          window.location.href = `${redirectUrl}`;
+        }
+      } catch (error) {
+        alert('Error sending data:', error);
+      }
+    }
+   }
+
    async function clickDeleteHandler(id){
     console.log(id);
     let input = prompt("Enter Secret:");
@@ -76,8 +96,11 @@
           headers: {
             'Content-Type': 'application/json'
           },
-          body: JSON.stringify({ userInput: input, game_id: id})
+          body: JSON.stringify({ _method: 'DELETE', userInput: input, game_id: id})
         })
+        if(response.ok){
+          window.location.href = `/games`;
+        }
       } catch (error){
         alert('Error sending data:', error);
       }
