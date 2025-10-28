@@ -219,6 +219,17 @@ async function getAllDataByTable(table){
   return rows;
 }
 
+// Deletes relational data based on table and id
+async function deleteAllRelationalDataOfGameById(table_name, id){
+  const sql = `
+    DELETE FROM games_${table_name}
+    WHERE game_id = $1
+  `;
+
+  await pool.query(sql, [id]);
+}
+
+
 // Older Queries
 
 // Categories
@@ -426,14 +437,6 @@ async function deleteGameById(id){
   await pool.query(sql, [id]);
 }
 
-async function deleteAllGenresOfGameById(id){
-  const sql = `
-    DELETE FROM games_genres
-    WHERE game_id = $1
-  `;
-
-  await pool.query(sql, [id]);
-}
 
 // Helper Functions
 
@@ -514,7 +517,7 @@ module.exports = {
   updateRelationByTable,
   updateGame,
   deleteGameById,
-  deleteAllGenresOfGameById,
+  deleteAllRelationalDataOfGameById,
   checkGameExists,
   getGameNameById,
   testQuery

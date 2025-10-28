@@ -307,57 +307,69 @@ exports.gamesIdEditPost = [
     const { id } = req.params
     const { game_name } = req.body;
 
-    const errors = validationResult(req);
-    const allGenres = await db.getAllDataByTable('genres');
-    const allDevelopers = await db.getAllDataByTable('developers');
-
+    let myData = {};
     const game = await db.getGameById(id);
-    const myGenresRows = await db.getGameGenresById(id);
-    let myGenresId = [];
-    myGenresRows.forEach((row) => {
-      myGenresId.push(row.genre_id);
-    })
-    const myDeveloper = await db.getGameDeveloperById(id);
+    myData.game = game;
+    myData.categories = {};
+    const allCategories = await db.getAllCategories();
+
+    for(const [ind, category] of allCategories.entries()){
+      let data = await db.getAllDataByTable(category.table_name);
+      category.data = data;
+
+      relatedData = await db.getRelationalDataByTableAndId(category.table_name, category.col_name, myData.game.game_id);
+      myData.categories[category.table_name] = {}
+      myData.categories[category.table_name]['ids'] = [];
+      relatedData.forEach((data) => {
+        myData.categories[category.table_name].ids.push(data[`${category.col_name}_id`]);
+      });
+    }
+
+    const errors = validationResult(req);
+
 
     if(!errors.isEmpty()){
       return res.status(400).render('pages/gamesIdEdit', {
         title: 'Edit Game',
-        myGame: game,
-        allGenres,
-        myGenresId,
-        allDevelopers,
-        myDeveloper: myDeveloper[0],
-        action: '/games/' + game.game_id + '/edit',
+        myData,
+        allCategories,
+        action: '/games/' + myData.game.game_id + '/edit',
         errors: errors.array(),
       })
     }
 
+    console.log("Testing match data", matchedData(req));
+
     // If no errors, proceed on updating
     const prevGame = await db.getGameById(id);
-    let game_id = prevGame[0].game_id;
+    let game_id = prevGame.game_id;
 
     // Check if game name is the same as the updated one, update if not
-    if(!(prevGame[0].game_name === game_name)){
+    if(!(prevGame.game_name === game_name)){
       console.log("Update new name");
       await db.updateGame(game_name, id);
     }
 
-    // Delete all genres for this specific game
-    await db.deleteAllGenresOfGameById(game_id);
+    // Delete all relational data for this specific game
+    console.log("Deleting...");
+    for(const category of allCategories){
+      await db.deleteAllRelationalDataOfGameById(category.table_name, game_id);
+    }
+ 
 
     // Inserts relational table data
     Object.keys(req.body).forEach(async (key) => {
       if(key !== 'game_name'){
         if(Array.isArray(req.body[key])){
-          console.log('an array');
+          // console.log('an array');
           req.body[key].forEach(async (item_id) => {
-            console.log('item', item_id);
+            // console.log('item', item_id);
             await db.insertRelationByTable(game_id, item_id, key);
           });
         } else {
-          console.log("not an array", req.body[key]);
-          console.log(key);
-          await db.updateRelationByTable(game_id, req.body[key], key);
+          // console.log("not an array", req.body[key]);
+          // console.log(key);
+          await db.insertRelationByTable(game_id, req.body[key], key);
         }
       }
     });
