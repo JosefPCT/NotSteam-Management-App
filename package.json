@@ -4,6 +4,7 @@
   "description": "A game inventory management app using Node and PostgresSQL.",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "node --watch app.js"
   },
