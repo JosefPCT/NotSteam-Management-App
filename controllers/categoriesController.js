@@ -76,9 +76,11 @@ const isNotSameAndUniqueDataInTable = async(value, { req }) => {
 const validateAddCategory = [
   body("table_name").trim()
     .notEmpty().withMessage(`Category Name(Plural) ${notEmptyErr}`)
+    .matches(/^[a-z0-9_]+$/).withMessage("Category Name(Plural) only allows lowercase letters, numbers and undescores")
     .custom(isUniqueCategory),
   body("col_name").trim()
     .notEmpty().withMessage(`Category Name(Singular) ${notEmptyErr}`)
+    .matches(/^[a-z0-9_]+$/).withMessage("Category Name(Singular) only allows lowercase letters, numbers and underscores")
     
 ];
 
@@ -137,6 +139,7 @@ exports.addPost = [
       })
     }
     const { table_name, col_name }= matchedData(req);
+
 
     if(table_name && col_name){
       await db.createTable(table_name, col_name);
